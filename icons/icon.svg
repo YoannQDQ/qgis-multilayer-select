@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="24"
+   height="24"
+   viewBox="0 0 6.35 6.35"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="icon.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   inkscape:export-filename="C:\Dvp\QGIS_PLUGINS\qgis-multilayer-select\icon.png"
+   inkscape:export-xdpi="256"
+   inkscape:export-ydpi="256">
+  <metadata
+     id="metadata14">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1642"
+     inkscape:window-height="720"
+     id="namedview10"
+     showgrid="false"
+     inkscape:zoom="6.9532166"
+     inkscape:cx="-20.419381"
+     inkscape:cy="19.611974"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg8" />
+  <rect
+     style="opacity:1;fill:#fce94f;fill-opacity:1;stroke:#c4a000;stroke-width:0.31070495;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+     id="rect5086"
+     width="3.1085625"
+     height="3.1055377"
+     x="-3.6824436"
+     y="4.1237154"
+     transform="matrix(0.84349461,-0.53713764,0.84236631,0.53890537,0,0)"
+     inkscape:transform-center-x="0.032015252"
+     inkscape:transform-center-y="-1.6327934" />
+  <rect
+     style="opacity:1;fill:#fce94f;fill-opacity:1;stroke:#c4a000;stroke-width:0.31070495;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+     id="rect5086-0"
+     width="3.1085625"
+     height="3.1055377"
+     x="-2.5692613"
+     y="3.1644123"
+     transform="matrix(0.84349461,-0.53713764,0.84236631,0.53890537,0,0)"
+     inkscape:transform-center-x="0.032015415"
+     inkscape:transform-center-y="-1.6327935" />
+  <rect
+     style="opacity:1;fill:#fce94f;fill-opacity:1;stroke:#c4a000;stroke-width:0.31070495;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
+     id="rect5086-1"
+     width="3.1085625"
+     height="3.1055377"
+     x="-1.4988697"
+     y="2.0925868"
+     transform="matrix(0.84349461,-0.53713764,0.84236631,0.53890537,0,0)"
+     inkscape:transform-center-x="0.032015434"
+     inkscape:transform-center-y="-1.6327935" />
+  <path
+     inkscape:connector-curvature="0"
+     d="M 5.9899059,4.1450806 2.6147581,2.298527 4.0640274,5.8972307 4.6410538,4.9629341 5.7819792,6.2100212 6.214076,5.7889897 5.0476342,4.5538354 5.9899062,4.1450806 Z"
+     style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.18520834;stroke-linecap:round;stroke-linejoin:round"
+     id="path6-1" />
+</svg>

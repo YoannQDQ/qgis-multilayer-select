@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="24"
+   width="24"
+   version="1.1"
+   id="svg12"
+   sodipodi:docname="selectRadius.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata18">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="716"
+     inkscape:window-height="480"
+     id="namedview14"
+     showgrid="false"
+     inkscape:zoom="9.8333333"
+     inkscape:cx="12"
+     inkscape:cy="12"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g10" />
+  <g
+     transform="translate(0 -1028.3622)"
+     id="g10">
+    <ellipse
+       cx="12.099533"
+       cy="1040.2717"
+       fill="#ebebeb"
+       rx="10.509376"
+       ry="10.509375"
+       id="ellipse2"
+       style="fill:#ebebeb;fill-opacity:0.29411766" />
+    <circle
+       cx="12"
+       cy="1040.3622"
+       fill="none"
+       r="10.500425"
+       stroke="#424242"
+       stroke-dasharray="1.99829691 .99914846"
+       stroke-dashoffset=".1684487"
+       stroke-width=".99914849"
+       id="circle6" />
+    <path
+       d="m22.652743 1044.0577l-12.756464-6.9791 5.477553 13.6014 2.180887-3.5312 4.312159 4.7134 1.633122-1.5913-4.408599-4.6683 3.561343-1.5449z"
+       style="fill:#fff;fill-rule:evenodd;stroke:#000;stroke-width:.69999999;stroke-linecap:round;stroke-linejoin:round"
+       id="path8" />
+  </g>
+</svg>

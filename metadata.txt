@@ -1,0 +1,33 @@
+[general]
+name=Multilayer Select
+qgisMinimumVersion=3.0
+description=Multilayer selection tools
+version=1.0.0
+author=Yoann Quenach de Quivillic
+email=yoann.quenach@gmail.com
+about=Add a toolbar to select by point/rectangle/circle across multiple vector layers
+ Change the active layer according to which feature was clicked
+ Optionaly replace the default selection actions with the multilayer actions
+
+hasProcessingProvider=no
+
+changelog=1.0.0 2020-09-01
+      * First version
+
+homepage=https://github.com/YoannQDQ/qgis-multilayer-select
+tracker=https://github.com/YoannQDQ/qgis-multilayer-select
+repository=https://github.com/YoannQDQ/qgis-multilayer-select
+
+icon=icon.png
+experimental=False
+tags=python,select,layer
+deprecated=False
+
+# Since QGIS 3.8, a comma separated list of plugins to be installed
+# (or upgraded) can be specified.
+# Check the documentation for more information.
+# plugin_dependencies=
+
+# If the plugin can run on QGIS Server.
+server=False
+
