@@ -11,7 +11,7 @@ about=Add a toolbar to select by point/rectangle/circle across multiple vector l
 
 hasProcessingProvider=no
 
-changelog=1.0.0 2020-09-01
+changelog=1.0.0 2020-08-26
       * First version
 
 homepage=https://github.com/YoannQDQ/qgis-multilayer-select
