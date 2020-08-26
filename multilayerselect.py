@@ -43,6 +43,7 @@ from .maptools import (
     MultiSelectionPolygonTool,
     MultiSelectionRadiusTool,
     MultiSelectionFreehandTool,
+    update_status_message,
 )
 
 from qgis.core import QgsProject, QgsVectorLayer
@@ -315,6 +316,7 @@ class MultiLayerSelect:
         for layer in QgsProject.instance().mapLayers().values():
             if isinstance(layer, QgsVectorLayer):
                 layer.removeSelection()
+        update_status_message()
 
     def select_all(self):
         for layer in QgsProject.instance().mapLayers().values():
@@ -325,6 +327,8 @@ class MultiLayerSelect:
         if self.embedded_advanced_tool_button:
             self.embedded_advanced_tool_button.setDefaultAction(self.select_all_action)
 
+        update_status_message()
+
     def invert_all(self):
         for layer in QgsProject.instance().mapLayers().values():
             if isinstance(layer, QgsVectorLayer):
@@ -333,6 +337,7 @@ class MultiLayerSelect:
 
         if self.embedded_advanced_tool_button:
             self.embedded_advanced_tool_button.setDefaultAction(self.invert_all_action)
+        update_status_message()
 
     def replace_default_action(self, value):
 

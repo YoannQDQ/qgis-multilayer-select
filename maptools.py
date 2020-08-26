@@ -1,7 +1,7 @@
 import math
 
 from PyQt5.QtGui import QCursor, QColor, QIcon, QCursor
-from PyQt5.QtCore import Qt, pyqtSignal, QSettings, QPoint
+from PyQt5.QtCore import Qt, pyqtSignal, QSettings, QPoint, QCoreApplication
 from PyQt5.QtWidgets import QAction
 
 from qgis.core import (
@@ -44,6 +44,39 @@ def cursorFromImage(path, activeX=6, activeY=6):
         )
 
     return cursor
+
+
+def update_status_message():
+
+    # Get the list of layers with at least one selected feature
+    active_layers = []
+    total = 0
+
+    for layer in QgsProject.instance().mapLayers().values():
+        if isinstance(layer, QgsVectorLayer):
+            count = layer.selectedFeatureCount()
+            if count > 0:
+                total += count
+                active_layers.append(layer)
+
+    if not active_layers:
+        iface.statusBarIface().showMessage(
+            QCoreApplication.translate("MultiSelectTool", "No features selected")
+        )
+        return
+
+    layers_str = ", ".join(l.name() for l in active_layers)
+
+    if len(active_layers) == 1:
+        msg = QCoreApplication.translate(
+            "MultiSelectTool", "{0} features selected on layer {1}", "", total
+        ).format(total, layers_str)
+    else:
+        msg = QCoreApplication.translate(
+            "MultiSelectTool", "{0} features selected on layers {1}", "", total
+        ).format(total, layers_str)
+
+    iface.statusBarIface().showMessage(msg)
 
 
 def hasMoved(pos1, pos2):
@@ -167,33 +200,7 @@ class MultiSelectTool(QgsMapToolIdentify):
             iface.setActiveLayer(active_layers[0])
 
         # Display status message
-        if total_selected_feature_count == 0:
-            iface.statusBarIface().showMessage(self.tr("No features selected"))
-        else:
-
-            if len(active_layers) > 1:
-                iface.statusBarIface().showMessage(
-                    self.tr(
-                        "{0} features selected on layers {1}",
-                        "",
-                        total_selected_feature_count,
-                    ).format(
-                        total_selected_feature_count,
-                        ", ".join(l.name() for l in active_layers),
-                    )
-                )
-            else:
-
-                iface.statusBarIface().showMessage(
-                    self.tr(
-                        "{0} features selected on layer {1}",
-                        "",
-                        total_selected_feature_count,
-                    ).format(
-                        total_selected_feature_count,
-                        ", ".join(l.name() for l in active_layers),
-                    )
-                )
+        update_status_message()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
