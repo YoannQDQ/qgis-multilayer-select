@@ -111,7 +111,18 @@ class MultiLayerSelect:
 
         # Create settings dialog
         self.settings_dialog = SettingsDialog(self.settings, self.iface.mainWindow())
-        self.settings_dialog.colorChanged.connect(self.on_color_changed)
+
+        try:
+            QgsProject.instance().selectionColorChanged.connect(self.on_color_changed)
+            QgsProject.instance().selectionColorChanged.connect(
+                self.settings_dialog.on_project_color_changed
+            )
+        except AttributeError:  # QGIS < 3.10
+            self.settings_dialog.colorChanged.connect(self.on_color_changed)
+            QgsProject.instance().readProject.connect(
+                self.settings_dialog.on_project_color_changed
+            )
+
         self.settings_dialog.settingsChanged.connect(self.on_settings_changed)
 
         self.toolbar = QToolBar("Multilayer Select", self.iface.mainWindow())
@@ -253,6 +264,17 @@ class MultiLayerSelect:
         self.toolbar.deleteLater()
 
         self.replace_default_action(False)
+
+        try:
+            QgsProject.instance().selectionColorChanged.disconnect(
+                self.on_color_changed
+            )
+            QgsProject.instance().selectionColorChanged.disconnect(
+                self.settings_dialog.on_project_color_changed
+            )
+
+        except AttributeError:  # QGIS < 3.10
+            pass
 
     def show_about(self):
 
