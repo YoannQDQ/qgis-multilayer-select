@@ -1,9 +1,16 @@
+""" Helper function to generate dynamic QIcons and QCursors """
+
+import math
+
 from PyQt5.QtCore import QSize, QPointF
-from PyQt5.QtGui import QIcon, QColor, QPainter, QPixmap, QPen, QPolygonF
+from PyQt5.QtGui import QIcon, QColor, QPainter, QPixmap, QPen, QPolygonF, QCursor
+
+from qgis.core import Qgis, QgsApplication
 
 
 def create_icon(icon_path, color, base_size=QSize(48, 48)):
-
+    """ Create a selection tool icon. Paint the icon specified by icon_path over
+    A small colored rectangle """
     output_pixmap = QPixmap(base_size)
     output_pixmap.fill(QColor("transparent"))
     painter = QPainter(output_pixmap)
@@ -28,6 +35,7 @@ def create_icon(icon_path, color, base_size=QSize(48, 48)):
 
 
 def select_all_icon(color, base_size=QSize(48, 48)):
+    """ Create the QGIS Select All icon with a dynamic color """
     output_pixmap = QPixmap(base_size)
     output_pixmap.fill(QColor("transparent"))
     painter = QPainter(output_pixmap)
@@ -50,6 +58,7 @@ def select_all_icon(color, base_size=QSize(48, 48)):
 
 
 def invert_selection_icon(color, base_size=QSize(48, 48)):
+    """ Create the QGIS Invert Selecion icon with a dynamic color """
     output_pixmap = QPixmap(base_size)
     output_pixmap.fill(QColor("transparent"))
     painter = QPainter(output_pixmap)
@@ -89,3 +98,27 @@ def invert_selection_icon(color, base_size=QSize(48, 48)):
     icon.addPixmap(output_pixmap)
 
     return icon
+
+
+def cursor_from_image(path, active_x=6, active_y=6):
+    """ Create a QCursor from an icon. active_x and active_y set the cursor hotpoint """
+
+    # All calculations are done on 32x32 icons
+    # Defaults to center, individual cursors may override
+    icon = QIcon(path)
+    cursor = QCursor()
+
+    if not icon.isNull():
+        # Apply scaling
+        scale = (
+            Qgis.UI_SCALE_FACTOR
+            * QgsApplication.instance().fontMetrics().height()
+            / 32.0
+        )
+        cursor = QCursor(
+            icon.pixmap(math.ceil(scale * 32), math.ceil(scale * 32)),
+            math.ceil(scale * active_x),
+            math.ceil(scale * active_y),
+        )
+
+    return cursor

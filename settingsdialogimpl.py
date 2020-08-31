@@ -1,4 +1,10 @@
-# -*- coding: utf-8 -*-
+""" MultiLayer Select Settings Dialog
+Allow to define:
+ - The selection color used for selected feature, icons and rubberbands
+ - Whether the plugin actions replace the default ones or not
+ - Whether the settings action (which launch this dialog) is available in the toolbar
+ - Whether selecting a feature changes the active layer
+"""
 
 from PyQt5.QtCore import pyqtSignal, QSettings
 from PyQt5.QtGui import QColor, QIcon
@@ -11,6 +17,7 @@ from .settingsdialog import Ui_SettingsDialog
 
 
 class SettingsDialog(QDialog, Ui_SettingsDialog):
+    """ Settings Dialog implementation """
 
     settingsChanged = pyqtSignal()
     colorChanged = pyqtSignal()
@@ -51,14 +58,19 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.replaceActionsCheckBox.toggled.connect(self.on_replace_actions_changed)
 
     def on_project_color_changed(self):
+        """ Called to update the color button when the project selection color changes,
+        or when the project is read for QGIS < 3.10 """
         try:
             self.selectionColorButton.setColor(QgsProject.instance().selectionColor())
         except AttributeError:  # QGIS < 3.10
             self.selectionColorButton.setColor(iface.mapCanvas().selectionColor())
 
     def on_color_changed(self, color: QColor):
+        """ Set the project selection color from the color button """
+
         try:
             QgsProject.instance().setSelectionColor(color)
+            # Mark the project dirty to make it "saveable"
             QgsProject.instance().setDirty()
         except AttributeError:  # QGIS < 3.10
             iface.mapCanvas().setSelectionColor(color)
@@ -75,16 +87,20 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
                 "Gui", "SelectionColorAlphaPart", color.alpha()
             )
 
+        # Will trigger the icon color change
         self.colorChanged.emit()
 
     def on_active_layer_changed(self, checked):
+        """ Update the set_active_layer setting """
         self.settings.setValue("set_active_layer", checked)
         self.settingsChanged.emit()
 
     def on_show_settings_changed(self, checked):
+        """ Update the show_settings setting """
         self.settings.setValue("show_settings", checked)
         self.settingsChanged.emit()
 
     def on_replace_actions_changed(self, checked):
+        """ Update the replace_actions setting """
         self.settings.setValue("replace_actions", checked)
         self.settingsChanged.emit()
