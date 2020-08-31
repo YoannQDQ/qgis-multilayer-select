@@ -75,7 +75,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
                 "Gui", "SelectionColorAlphaPart", color.alpha()
             )
 
-            self.colorChanged.emit()
+        self.colorChanged.emit()
 
     def on_active_layer_changed(self, checked):
         self.settings.setValue("set_active_layer", checked)
