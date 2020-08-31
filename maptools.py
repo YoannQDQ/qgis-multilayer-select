@@ -214,6 +214,7 @@ class MultiSelectionPolygonTool(MultiSelectTool):
         self.setCursor(
             cursorFromImage(":/plugins/multilayerselect/icons/selectPolygonCursor.svg")
         )
+        self.pressed = False
 
     def canvasPressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -225,6 +226,7 @@ class MultiSelectionPolygonTool(MultiSelectTool):
             for i in range(self.rubber.numberOfVertices()):
                 self.rubber2.addPoint(self.rubber.getPoint(0, i))
             self.rubber2.addPoint(point)
+            self.pressed = True
 
         elif event.button() == Qt.RightButton:
             if self.rubber.numberOfVertices() > 2:
@@ -232,9 +234,16 @@ class MultiSelectionPolygonTool(MultiSelectTool):
                 self.select(geom, event.modifiers())
             self.reset()
 
+    def canvasReleaseEvent(self, event):
+        self.pressed = False
+
     def canvasMoveEvent(self, event):
         point = self.toMapCoordinates(event.pos())
-        self.rubber2.movePoint(self.rubber2.numberOfVertices() - 1, point)
+        if self.pressed:
+            self.rubber.addPoint(point)
+            self.rubber2.addPoint(point)
+        else:
+            self.rubber2.movePoint(self.rubber2.numberOfVertices() - 1, point)
 
 
 class MultiSelectionAreaTool(MultiSelectTool):
