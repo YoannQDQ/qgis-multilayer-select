@@ -1,79 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="fr" sourcelanguage="">
+<!DOCTYPE TS>
+<TS version="2.1" language="fr">
 <context>
     <name>MultiLayerSelect</name>
     <message>
-        <location filename="../multilayerselect.py" line="124"/>
+        <location filename="../multilayerselect.py" line="121"/>
         <source>About</source>
         <translation>À propos</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="131"/>
+        <location filename="../multilayerselect.py" line="128"/>
         <source>Settings</source>
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="137"/>
+        <location filename="../multilayerselect.py" line="134"/>
         <source>&lt;b&gt;Multilayer Select Settings&lt;/b&gt;</source>
         <translation>&lt;b&gt;Paramètres de Multilayer Select&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="161"/>
+        <location filename="../multilayerselect.py" line="158"/>
         <source>Select Features</source>
         <translation>Sélectionner les entités</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="161"/>
+        <location filename="../multilayerselect.py" line="158"/>
         <source>&lt;b&gt;Select Features by area or single click&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Sélectionner les entités par rectangle ou par simple click&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Sélectionner les entités par rectangle ou par simple clic&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="168"/>
+        <location filename="../multilayerselect.py" line="165"/>
         <source>Select Features by Polygon</source>
         <translation>Sélectionner les entités par polygône</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="174"/>
+        <location filename="../multilayerselect.py" line="171"/>
         <source>Select Features by Freehand</source>
         <translation>Sélectionner les entités à main levée</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="180"/>
+        <location filename="../multilayerselect.py" line="177"/>
         <source>Select Features by Radius</source>
         <translation>Sélectionner les entités par rayon</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="213"/>
+        <location filename="../multilayerselect.py" line="210"/>
         <source>Select all features from all layers</source>
         <translation>Sélectionner toutes les entités de toutes les couches</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="224"/>
+        <location filename="../multilayerselect.py" line="221"/>
         <source>Invert selection for all layers</source>
         <translation>Inverser la sélection pour toutes les couches</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="233"/>
+        <location filename="../multilayerselect.py" line="230"/>
         <source>Deselect features from all layers</source>
         <translation>Désélectionner les entités de toutes les couches</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="297"/>
+        <location filename="../multilayerselect.py" line="294"/>
         <source>About Multilayer Select</source>
         <translation>À propos de Multilayer Select</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="297"/>
+        <location filename="../multilayerselect.py" line="294"/>
         <source>Source code</source>
         <translation>Code source</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="297"/>
+        <location filename="../multilayerselect.py" line="294"/>
         <source>Report issues</source>
         <translation>Signaler un problème</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="297"/>
+        <location filename="../multilayerselect.py" line="294"/>
         <source>Documentation</source>
         <translation>Documentation</translation>
     </message>
@@ -100,6 +101,14 @@
             <numerusform>{0} entité sélectionnée sur la couche {1}</numerusform>
             <numerusform>{0} entités sélectionnées sur la couche {1}</numerusform>
         </translation>
+    </message>
+</context>
+<context>
+    <name>MultiSelectionRadiusTool</name>
+    <message>
+        <location filename="../maptools.py" line="490"/>
+        <source>Selection radius</source>
+        <translation>Rayon de sélection</translation>
     </message>
 </context>
 <context>

@@ -36,7 +36,7 @@ from PyQt5.QtWidgets import (
 
 from qgis.core import QgsProject, QgsVectorLayer
 
-from .settingsdialog import SettingsDialog
+from .settingsdialogimpl import SettingsDialog
 from .icon_utils import create_icon, select_all_icon, invert_selection_icon
 from .maptools import (
     MultiSelectionAreaTool,

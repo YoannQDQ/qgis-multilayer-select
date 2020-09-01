@@ -2,8 +2,8 @@
 
 import math
 
-from PyQt5.QtCore import Qt, QSettings, QPoint, QCoreApplication
-from PyQt5.QtWidgets import QAction
+from PyQt5.QtCore import Qt, QSettings, QPoint, QCoreApplication, pyqtSignal, QEvent
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QSizePolicy
 
 from qgis.core import (
     QgsGeometry,
@@ -13,7 +13,7 @@ from qgis.core import (
     QgsPointXY,
     QgsRectangle,
 )
-from qgis.gui import QgsMapTool, QgsRubberBand, QgsMapToolIdentify
+from qgis.gui import QgsMapTool, QgsRubberBand, QgsMapToolIdentify, QgsDoubleSpinBox
 from qgis.utils import iface
 
 from .icon_utils import cursor_from_image
@@ -217,11 +217,10 @@ class MultiSelectTool(QgsMapToolIdentify):
         update_status_message()
 
     def keyPressEvent(self, event):
-        """ Called when the Escape key is pressed. Deactivate the tool """
+        """ Called when the Escape key is pressed. Reset the tool """
         # pylint: disable=invalid-name
         if event.key() == Qt.Key_Escape:
             self.reset()
-            iface.mainWindow().findChild(QAction, "mActionPan").trigger()
 
 
 class MultiSelectionAreaTool(MultiSelectTool):
@@ -348,6 +347,70 @@ class MultiSelectionPolygonTool(MultiSelectTool):
             self.rubber2.movePoint(self.rubber2.numberOfVertices() - 1, point)
 
 
+class DistanceWidget(QWidget):
+    """ Widget used to manually edit the selection radius"""
+
+    distanceChanged = pyqtSignal(float)
+    distanceEditingFinished = pyqtSignal(Qt.KeyboardModifiers)
+    distanceEditingCanceled = pyqtSignal()
+
+    def __init__(self, label, parent=None):
+        super().__init__(parent)
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setAlignment(Qt.AlignLeft)
+
+        if label:
+            self.label = QLabel(label, self)
+            self.label.setAlignment(Qt.AlignRight | Qt.AlignCenter)
+            layout.addWidget(self.label)
+
+        self.spinbox = QgsDoubleSpinBox(self)
+        self.spinbox.setSingleStep(1)
+        self.spinbox.setValue(0)
+        self.spinbox.setMinimum(0)
+        self.spinbox.setMaximum(1000000000)
+        self.spinbox.setDecimals(6)
+        self.spinbox.setShowClearButton(False)
+        self.spinbox.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Preferred)
+        layout.addWidget(self.spinbox)
+
+        # connect signals
+        self.spinbox.installEventFilter(self)
+        self.spinbox.valueChanged.connect(self.distanceChanged.emit)
+
+        # config focus
+        self.setFocusProxy(self.spinbox)
+
+    def set_distance(self, distance):
+        """ set the selection radius """
+        self.spinbox.setValue(distance)
+        self.spinbox.selectAll()
+
+    def distance(self):
+        """ return he selection radius """
+        return self.spinbox.value()
+
+    def eventFilter(self, obj, event):
+        """ Intercept key press event to emit our own custom signals """
+        # pylint: disable=invalid-name
+
+        if obj is self.spinbox and event.type() == QEvent.KeyPress:
+
+            if event.key() == Qt.Key_Escape:
+
+                self.distanceEditingCanceled.emit()
+                return True
+
+            if event.key() in (Qt.Key_Enter, Qt.Key_Return):
+                # Emit the editing finished signal with modifier to handle remove
+                # from selection and add to selection
+                self.distanceEditingFinished.emit(event.modifiers())
+                return True
+
+        return False
+
+
 class MultiSelectionRadiusTool(MultiSelectTool):
     """ Circle multi selection tool """
 
@@ -357,6 +420,7 @@ class MultiSelectionRadiusTool(MultiSelectTool):
             cursor_from_image(":/plugins/multilayerselect/icons/selectRadiusCursor.svg")
         )
         self.center_point = None
+        self.distance_widget: DistanceWidget = None
 
     def canvasMoveEvent(self, event):
         """ Called when the mouse is moved. Do nothing no center point """
@@ -366,7 +430,7 @@ class MultiSelectionRadiusTool(MultiSelectTool):
         if self.center_point:
             edge_point = self.toMapCoordinates(event.pos())
             radius = math.sqrt(self.center_point.sqrDist(edge_point))
-            self.update_radius_rubberband(radius)
+            self.distance_widget.set_distance(radius)
 
     def canvasReleaseEvent(self, event):
         """ Called when the mouse is released """
@@ -385,19 +449,25 @@ class MultiSelectionRadiusTool(MultiSelectTool):
         if not self.center_point:
             self.center_point = self.toMapCoordinates(event.pos())
             self.refresh_color()
+            self.create_distance_widget()
             return
 
+        self.validate(event.modifiers())
+
+    def validate(self, modifiers):
+        """ Validate the current selection with the KeyboardModifiers """
         geometry = self.rubber.asGeometry()
-        self.select(geometry, event.modifiers())
+        self.select(geometry, modifiers)
         self.reset()
 
     def reset(self):
         """ Reset the rubbers and center point """
         super().reset()
         self.center_point = None
+        self.delete_distance_widget()
 
     def update_radius_rubberband(self, radius):
-        """ Update the rubber band to dra a circle centered on self.center_point
+        """ Update the rubber band to draw a circle centered on self.center_point
         with radius """
 
         self.rubber.reset(QgsWkbTypes.PolygonGeometry)
@@ -412,6 +482,25 @@ class MultiSelectionRadiusTool(MultiSelectTool):
             self.rubber.addPoint(radius_point, False)
 
         self.rubber.closePoints(True)
+
+    def create_distance_widget(self):
+        """ Create the radius edition widget """
+        self.delete_distance_widget()
+        self.distance_widget = DistanceWidget(self.tr("Selection radius"))
+
+        self.distance_widget.distanceChanged.connect(self.update_radius_rubberband)
+        self.distance_widget.distanceEditingFinished.connect(self.validate)
+        self.distance_widget.distanceEditingCanceled.connect(self.reset)
+
+        iface.addUserInputWidget(self.distance_widget)
+
+        self.distance_widget.setFocus(Qt.TabFocusReason)
+
+    def delete_distance_widget(self):
+        """ Delete the radius edition widget """
+        if self.distance_widget:
+            self.distance_widget.deleteLater()
+            self.distance_widget = None
 
 
 class MultiSelectionFreehandTool(MultiSelectTool):
