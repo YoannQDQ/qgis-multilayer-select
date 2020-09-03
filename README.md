@@ -12,8 +12,13 @@ Add new selection tools that work across layers.
 - Add/Remove to/from selection when pressing Shift/Ctrl
 - Select all features from all layers
 - Invert all features
+- Select by expression
 
 ![Toolbar](./docs/toolbar.png)
+
+**Example**: Multi selection with the polygon tool
+
+![PolygonTool](./docs/polygon.gif)
 
 Settings dialog
 ---
