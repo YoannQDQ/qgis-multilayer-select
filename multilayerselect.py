@@ -37,7 +37,12 @@ from PyQt5.QtWidgets import (
 from qgis.core import QgsProject, QgsVectorLayer
 
 from .settingsdialogimpl import SettingsDialog
-from .icon_utils import create_icon, select_all_icon, invert_selection_icon
+from .icon_utils import (
+    create_icon,
+    select_all_icon,
+    invert_selection_icon,
+    expression_select_icon,
+)
 from .maptools import (
     MultiSelectionAreaTool,
     MultiSelectionPolygonTool,
@@ -45,6 +50,8 @@ from .maptools import (
     MultiSelectionFreehandTool,
     update_status_message,
 )
+
+from .multiselectionexpressionbuilder import MultiLayerSelectionExpressionBuilder
 
 # pylint: disable=wildcard-import,unused-wildcard-import
 from .resources import *
@@ -101,6 +108,7 @@ class MultiLayerSelect:
 
         # Create settings dialog
         self.settings_dialog = SettingsDialog(self.settings, self.iface.mainWindow())
+        self.expression_dialog = None
 
         try:
             QgsProject.instance().selectionColorChanged.connect(self.on_color_changed)
@@ -225,6 +233,18 @@ class MultiLayerSelect:
         self.invert_all_action.setObjectName("actionMultiSelectInvert")
         self.invert_all_action.triggered.connect(self.invert_all)
         self.advanced_selection_tool_button.addAction(self.invert_all_action)
+
+        self.select_by_expr_action = QAction(
+            QIcon(":/images/themes/default/mIconExpressionSelect.svg"),
+            self.tr("Select features by expression"),
+        )
+        self.select_by_expr_action.setToolTip(
+            "<b>{}</b>".format(self.select_by_expr_action.text())
+        )
+        self.select_by_expr_action.setObjectName("actionMultiSelectExpr")
+        self.select_by_expr_action.triggered.connect(self.select_by_expression)
+        self.advanced_selection_tool_button.addAction(self.select_by_expr_action)
+
         self.toolbar.addWidget(self.advanced_selection_tool_button)
 
         self.deselect_all_action = QAction(self.tr("Deselect features from all layers"))
@@ -334,6 +354,9 @@ class MultiLayerSelect:
         icon = invert_selection_icon(color)
         self.invert_all_action.setIcon(icon)
 
+        icon = expression_select_icon(color)
+        self.select_by_expr_action.setIcon(icon)
+
     def on_settings_changed(self):
         """ Called when any setting has changed """
         if self.settings.value("show_settings", True, bool):
@@ -373,6 +396,22 @@ class MultiLayerSelect:
             self.embedded_advanced_tool_button.setDefaultAction(self.invert_all_action)
         update_status_message()
 
+    def select_by_expression(self):
+        """ Create and open the Expression builder dialog"""
+
+        if self.expression_dialog:
+            self.expression_dialog.deleteLater()
+        self.expression_dialog = MultiLayerSelectionExpressionBuilder()
+        self.expression_dialog.show()
+
+        self.advanced_selection_tool_button.setDefaultAction(self.select_by_expr_action)
+
+        if self.embedded_advanced_tool_button:
+            self.embedded_advanced_tool_button.setDefaultAction(
+                self.select_by_expr_action
+            )
+        update_status_message()
+
     def replace_default_action(self, value):
         """Replace the default QGIS selection action with the multilayer ones
 
@@ -389,7 +428,6 @@ class MultiLayerSelect:
 
         actiontable = main_window.findChild(QAction, "mActionOpenTable")
         actionform = main_window.findChild(QAction, "mActionSelectByForm")
-        actionexpression = main_window.findChild(QAction, "mActionSelectByExpression")
 
         # Remove the multi layer tool buttons from the QGIS attribute toolbar
         toolbar.removeAction(self.embedded_selection_tool_button_action)
@@ -414,8 +452,8 @@ class MultiLayerSelect:
             self.embedded_advanced_tool_button.addAction(self.select_all_action)
             self.embedded_advanced_tool_button.setDefaultAction(self.select_all_action)
             self.embedded_advanced_tool_button.addAction(self.invert_all_action)
+            self.embedded_advanced_tool_button.addAction(self.select_by_expr_action)
             self.embedded_advanced_tool_button.addAction(actionform)
-            self.embedded_advanced_tool_button.addAction(actionexpression)
 
             self.embedded_selection_tool_button_action = toolbar.insertWidget(
                 actiontable, self.embedded_selection_tool_button

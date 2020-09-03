@@ -100,6 +100,31 @@ def invert_selection_icon(color, base_size=QSize(48, 48)):
     return icon
 
 
+def expression_select_icon(color, base_size=QSize(48, 48)):
+    """ Create the expression icon """
+    output_pixmap = QPixmap(base_size)
+    output_pixmap.fill(QColor("transparent"))
+    painter = QPainter(output_pixmap)
+
+    ratio = base_size.width() / 48.0
+
+    base_icon = QIcon(":/plugins/multilayerselect/icons/selectExpression.svg")
+    base_pixmap = base_icon.pixmap(base_size)
+
+    stroke_color = color.darker()
+    painter.setRenderHint(QPainter.Antialiasing)
+    painter.setPen(QPen(stroke_color, 2 * ratio))
+    painter.setBrush(color)
+    painter.drawRect(18 * ratio, 18 * ratio, 28 * ratio, 28 * ratio)
+    painter.drawPixmap(0, 0, base_pixmap)
+    del painter
+
+    icon = QIcon()
+    icon.addPixmap(output_pixmap)
+
+    return icon
+
+
 def cursor_from_image(path, active_x=6, active_y=6):
     """ Create a QCursor from an icon. active_x and active_y set the cursor hotpoint """
 

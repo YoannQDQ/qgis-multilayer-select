@@ -11,5 +11,6 @@
         <file>icons/selectRadius.svg</file>
         <file>icons/selectRectangle.svg</file>
         <file>icons/deselectAll.svg</file>
+        <file>icons/selectExpression.svg</file>
     </qresource>
 </RCC>
