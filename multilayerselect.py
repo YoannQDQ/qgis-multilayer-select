@@ -51,6 +51,8 @@ from .maptools import (
     update_status_message,
 )
 
+from .utils import vector_layers
+
 from .multiselectionexpressionbuilder import MultiLayerSelectionExpressionBuilder
 
 # pylint: disable=wildcard-import,unused-wildcard-import
@@ -236,7 +238,7 @@ class MultiLayerSelect:
 
         self.select_by_expr_action = QAction(
             QIcon(":/images/themes/default/mIconExpressionSelect.svg"),
-            self.tr("Select features by expression"),
+            self.tr("Select Features by Expression..."),
         )
         self.select_by_expr_action.setToolTip(
             "<b>{}</b>".format(self.select_by_expr_action.text())
@@ -368,16 +370,14 @@ class MultiLayerSelect:
 
     def deselect_all(self):
         """ Deselect every feature """
-        for layer in QgsProject.instance().mapLayers().values():
-            if isinstance(layer, QgsVectorLayer):
-                layer.removeSelection()
+        for layer in vector_layers():
+            layer.removeSelection()
         update_status_message()
 
     def select_all(self):
         """ Select all the features from every vector layer """
-        for layer in QgsProject.instance().mapLayers().values():
-            if isinstance(layer, QgsVectorLayer):
-                layer.selectAll()
+        for layer in vector_layers():
+            layer.selectAll()
         self.advanced_selection_tool_button.setDefaultAction(self.select_all_action)
 
         if self.embedded_advanced_tool_button:
@@ -387,9 +387,8 @@ class MultiLayerSelect:
 
     def invert_all(self):
         """ Invert the selection of every vector layer """
-        for layer in QgsProject.instance().mapLayers().values():
-            if isinstance(layer, QgsVectorLayer):
-                layer.invertSelection()
+        for layer in vector_layers():
+            layer.invertSelection()
         self.advanced_selection_tool_button.setDefaultAction(self.invert_all_action)
 
         if self.embedded_advanced_tool_button:

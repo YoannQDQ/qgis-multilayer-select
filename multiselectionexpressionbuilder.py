@@ -11,12 +11,12 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QAction,
+    QCheckBox,
 )
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 
 from qgis.core import (
-    QgsApplication,
     QgsVectorLayer,
     QgsFields,
     QgsExpressionContext,
@@ -54,13 +54,17 @@ class MultiLayerSelectionExpressionBuilder(QDialog):
 
         hlayout = QHBoxLayout()
         self.help_button = QPushButton(
-            QIcon(":/images/themes/default/mActionHelpContents.svg"),
-            QgsApplication.translate("@default", "Help"),
+            QIcon(":/images/themes/default/mActionHelpContents.svg"), self.tr("Help"),
         )
         self.help_button.clicked.connect(
             partial(QgsHelp.openHelp, "working_with_vector/expression.html")
         )
         hlayout.addWidget(self.help_button)
+
+        self.only_active_checkbox = QCheckBox()
+        self.only_active_checkbox.setText(self.tr("Only use active layer"))
+        hlayout.addWidget(self.only_active_checkbox)
+
         hlayout.addStretch()
 
         self.close_button = QPushButton(self.tr("Close"))
@@ -109,6 +113,17 @@ class MultiLayerSelectionExpressionBuilder(QDialog):
         layout.addWidget(self.expression_builder)
         layout.addLayout(hlayout)
 
+    def layers(self):
+        """ Return the layer list used by the expression builder """
+
+        if self.only_active_checkbox.isChecked():
+            if not iface.activeLayer() or not isinstance(
+                iface.activeLayer(), QgsVectorLayer
+            ):
+                return []
+            return [iface.activeLayer()]
+        return vector_layers()
+
     @property
     def expression(self):
         """ Returns the builder's expression as a string """
@@ -137,7 +152,7 @@ class MultiLayerSelectionExpressionBuilder(QDialog):
     def select(self, selection_mode):
         """ Select all feature matching the current expression from every vecotr layer
         with the selection mode """
-        for layer in vector_layers():
+        for layer in self.layers():
             layer.selectByExpression(self.expression, selection_mode)
         self.save_recent()
         self.select_button.setDefaultAction(self.sender())
@@ -153,7 +168,7 @@ class MultiLayerSelectionExpressionBuilder(QDialog):
         bbox.setMinimal()
         feature_count = 0
 
-        for layer in vector_layers():
+        for layer in self.layers():
 
             context = QgsExpressionContext(
                 QgsExpressionContextUtils.globalProjectLayerScopes(layer)
@@ -186,7 +201,11 @@ class MultiLayerSelectionExpressionBuilder(QDialog):
 
             iface.messageBar().pushMessage(
                 "",
-                self.tr("Zoomed to {0} matching feature(s)").format(feature_count),
+                self.tr(
+                    "Zoomed to {0} matching feature(s)",
+                    "matching feature count",
+                    feature_count,
+                ).format(feature_count),
                 Qgis.Info,
                 timeout,
             )
