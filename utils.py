@@ -2,19 +2,31 @@
 Helper functions
 """
 
-from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtCore import QCoreApplication, Qt, QSettings
 
 from qgis.utils import iface
-from qgis.core import QgsProject, QgsVectorLayer
+from qgis.core import QgsProject, QgsVectorLayer, QgsMapLayer
 
 
 def vector_layers():
     """ Return the list of vector layers used by the plugin """
-    return (
-        layer
-        for layer in QgsProject.instance().mapLayers().values()
-        if isinstance(layer, QgsVectorLayer)
-    )
+
+    settings = QSettings()
+    settings.beginGroup("plugins/multilayerselect")
+    include_active = settings.value("always_include_active_layer", True, bool)
+
+    return [
+        layer_node.layer()
+        for layer_node in QgsProject.instance().layerTreeRoot().findLayers()
+        if isinstance(layer_node.layer(), QgsVectorLayer)
+        and (
+            (layer_node.layer() == iface.activeLayer() and include_active)
+            or not layer_node.layer().customProperty(
+                "plugins/multilayerselect/excluded", False
+            )
+            in (True, "true", "True", "1")
+        )
+    ]
 
 
 def update_status_message():
@@ -54,3 +66,11 @@ def update_status_message():
         ).format(total, layers_str)
 
     iface.statusBarIface().showMessage(msg)
+
+
+def icon_from_layer(layer: QgsMapLayer):
+    """ Get the layer icon from the layer tree """
+    layer_node = QgsProject.instance().layerTreeRoot().findLayer(layer)
+    treemodel = iface.layerTreeView().model()
+    index = treemodel.node2index(layer_node)
+    return treemodel.data(index, Qt.DecorationRole)

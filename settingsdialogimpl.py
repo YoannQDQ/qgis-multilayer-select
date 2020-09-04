@@ -5,15 +5,100 @@ Allow to define:
  - Whether the settings action (which launch this dialog) is available in the toolbar
  - Whether selecting a feature changes the active layer
 """
+from collections import Counter
 
-from PyQt5.QtCore import pyqtSignal, QSettings
+from PyQt5.QtCore import pyqtSignal, QSettings, Qt
 from PyQt5.QtGui import QColor, QIcon
 from PyQt5.QtWidgets import QDialog
 
 from qgis.utils import iface
-from qgis.core import QgsProject
+from qgis.core import QgsMapLayerProxyModel, QgsMapLayerModel, QgsProject
 
 from .settingsdialog import Ui_SettingsDialog
+from .utils import icon_from_layer
+
+
+class LayerModel(QgsMapLayerProxyModel):
+    """ Checkable Layer Model to include / exclude vector layers from the multilayer
+    selection tools """
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setFilters(QgsMapLayerProxyModel.VectorLayer)
+
+    def name_list(self):
+        """ Return the list of vector layer names """
+        names = []
+        for i in range(self.rowCount()):
+            names.append(super().data(self.index(i, 0)))
+
+        return names
+
+    def non_unique_names(self):
+        """ Return the list of non-unique vector layer names """
+        return [k for k, v in Counter(self.name_list()).items() if v > 1]
+
+    def include_all(self):
+        """ Include all layers in the multiselection tools (default behavior)
+        Remove the custom property from every layers """
+        for layer in QgsProject.instance().mapLayers().values():
+            layer.removeCustomProperty("plugins/multilayerselect/excluded")
+        self.dataChanged.emit(
+            self.index(0, 0), self.index(self.rowCount(), 0), [Qt.CheckStateRole]
+        )
+
+    def exlude_all(self):
+        """ Exclude all layers from the multiselection tools
+        This is done by addinf a custom property on the layers """
+        for layer in QgsProject.instance().mapLayers().values():
+            layer.setCustomProperty("plugins/multilayerselect/excluded", True)
+        self.dataChanged.emit(
+            self.index(0, 0), self.index(self.rowCount(), 0), [Qt.CheckStateRole]
+        )
+
+    def flags(self, index):
+        """ Make the model checkable """
+        # pylint: disable=unused-argument
+        return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsUserCheckable
+
+    def setData(self, index, value, role=Qt.DisplayRole):
+        """ When checking an item, set the matching layer's custom property """
+        # pylint: disable=invalid-name
+        layer = super().data(index, QgsMapLayerModel.LayerRole)
+        if not layer:
+            return super().setData(index, value, role)
+
+        if role == Qt.CheckStateRole:
+            layer.setCustomProperty(
+                "plugins/multilayerselect/excluded", value == Qt.Unchecked
+            )
+            return True
+
+        return super().setData(index, value, role)
+
+    def data(self, index, role=Qt.DisplayRole):
+        """ Custom data function """
+        layer = super().data(index, QgsMapLayerModel.LayerRole)
+        if not layer:
+            return super().data(index, role)
+
+        # If layer name is unique, returns <layerName>, else return <layerName> (<id>)
+        if role == Qt.DisplayRole:
+            original_name = super().data(index, role)
+            if original_name in self.non_unique_names():
+                return f"{original_name} ({super().data(index, QgsMapLayerModel.LayerIdRole)})"
+
+        # Get the icon from the layer tree view
+        if role == Qt.DecorationRole:
+            return icon_from_layer(layer)
+
+        if role == Qt.CheckStateRole:
+            excluded = layer.customProperty(
+                "plugins/multilayerselect/excluded", False
+            ) in (True, "true", "True", "1")
+            return 0 if excluded else 2
+
+        return super().data(index, role)
 
 
 class SettingsDialog(QDialog, Ui_SettingsDialog):
@@ -51,11 +136,23 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
             self.settings.value("replace_actions", False, bool)
         )
 
+        self.includeActiveLayerCheckBox.setChecked(
+            self.settings.value("always_include_active_layer", True, bool)
+        )
+
+        self.layer_model = LayerModel(self)
+        self.view.setModel(self.layer_model)
+
         # Connect signals
         self.selectionColorButton.colorChanged.connect(self.on_color_changed)
         self.activeLayerCheckBox.toggled.connect(self.on_active_layer_changed)
         self.showSettingsCheckBox.toggled.connect(self.on_show_settings_changed)
         self.replaceActionsCheckBox.toggled.connect(self.on_replace_actions_changed)
+        self.includeActiveLayerCheckBox.toggled.connect(
+            self.on_always_include_active_layer_changed
+        )
+        self.excludeButton.clicked.connect(self.layer_model.exlude_all)
+        self.includeButton.clicked.connect(self.layer_model.include_all)
 
     def on_project_color_changed(self):
         """ Called to update the color button when the project selection color changes,
@@ -103,4 +200,9 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
     def on_replace_actions_changed(self, checked):
         """ Update the replace_actions setting """
         self.settings.setValue("replace_actions", checked)
+        self.settingsChanged.emit()
+
+    def on_always_include_active_layer_changed(self, checked):
+        """ Update the replace_actions setting """
+        self.settings.setValue("always_include_active_layer", checked)
         self.settingsChanged.emit()

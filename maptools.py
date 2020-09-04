@@ -8,7 +8,6 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QSizePolicy
 from qgis.core import (
     QgsGeometry,
     QgsVectorLayer,
-    QgsProject,
     QgsWkbTypes,
     QgsPointXY,
     QgsRectangle,
@@ -18,7 +17,7 @@ from qgis.utils import iface
 
 from .icon_utils import cursor_from_image
 
-from .utils import update_status_message
+from .utils import update_status_message, vector_layers
 
 
 def has_moved(pos1: QPoint, pos2: QPoint, pixel_threshold=10):
@@ -93,22 +92,24 @@ class MultiSelectTool(QgsMapToolIdentify):
             modifiers (Qt.KeyboardModifiers): Which modifier keys are pressed
         """
 
+        layers = vector_layers()
+
+        if not layers:
+            return
+
         # Selection Mode
         ctrl = modifiers & Qt.ControlModifier
         shift = modifiers & Qt.ShiftModifier
 
         # Compute the already selected features for each vector layer
-        selected_dict = {
-            layer: [layer.selectedFeatureIds(), []]
-            for layer in QgsProject.instance().mapLayers().values()
-            if isinstance(layer, QgsVectorLayer)
-        }
+        selected_dict = {layer: [layer.selectedFeatureIds(), []] for layer in layers}
 
         # Select by point
         if isinstance(geom, QgsPointXY):
             results = self.identify(
                 QgsGeometry.fromPointXY(geom),
                 QgsMapToolIdentify.TopDownStopAtFirst,
+                layers,
                 QgsMapToolIdentify.VectorLayer,
             )
 
@@ -138,7 +139,10 @@ class MultiSelectTool(QgsMapToolIdentify):
         # Select by geometry
         else:
             results = self.identify(
-                geom, QgsMapToolIdentify.TopDownAll, QgsMapToolIdentify.VectorLayer,
+                geom,
+                QgsMapToolIdentify.TopDownAll,
+                layers,
+                QgsMapToolIdentify.VectorLayer,
             )
 
             for res in results:

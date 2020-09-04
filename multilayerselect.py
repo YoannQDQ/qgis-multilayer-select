@@ -333,6 +333,16 @@ class MultiLayerSelect:
     def show_settings(self):
         """ Show the settings dialog """
 
+        geometry = self.settings_dialog.geometry()
+
+        # The first time the dialog is shown (y=0), explicitely set its geometry
+        # which allow to restore the geometry on subsequent calls
+        if geometry.y() == 0:
+            self.settings_dialog.show()
+            self.settings_dialog.raise_()
+            self.settings_dialog.setGeometry(self.settings_dialog.geometry())
+            return
+
         self.settings_dialog.show()
         self.settings_dialog.raise_()
 
@@ -370,8 +380,9 @@ class MultiLayerSelect:
 
     def deselect_all(self):
         """ Deselect every feature """
-        for layer in vector_layers():
-            layer.removeSelection()
+        for layer in QgsProject.instance().mapLayers().values():
+            if isinstance(layer, QgsVectorLayer):
+                layer.removeSelection()
         update_status_message()
 
     def select_all(self):

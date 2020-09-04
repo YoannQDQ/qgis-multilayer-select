@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>426</width>
-    <height>154</height>
+    <width>279</width>
+    <height>356</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>24</width>
+         <width>60</width>
          <height>20</height>
         </size>
        </property>
@@ -94,6 +94,62 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="toolTip">
+      <string>Allow to define layers that will not be considered by the multiselection tools (i.e. vector basemaps)</string>
+     </property>
+     <property name="title">
+      <string>Included Layers</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QCheckBox" name="includeActiveLayerCheckBox">
+        <property name="toolTip">
+         <string>If checked, the active layer will be handled by the selection tools even if it is unchecked in the list below</string>
+        </property>
+        <property name="text">
+         <string>Always include active layer</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListView" name="view"/>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="includeButton">
+          <property name="text">
+           <string>Include All</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="excludeButton">
+          <property name="text">
+           <string>Exclude All</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <spacer name="verticalSpacer">
