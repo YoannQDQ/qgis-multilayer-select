@@ -143,12 +143,12 @@
 <context>
     <name>MultiSelectTool</name>
     <message>
-        <location filename="../utils.py" line="36"/>
+        <location filename="../utils.py" line="48"/>
         <source>No features selected</source>
         <translation>Aucune entité séléctionnée</translation>
     </message>
     <message numerus="yes">
-        <location filename="../utils.py" line="52"/>
+        <location filename="../utils.py" line="64"/>
         <source>{0} features selected on layers {1}</source>
         <translation>
             <numerusform>{0} entité sélectionnée sur les couches {1}</numerusform>
@@ -156,7 +156,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../utils.py" line="46"/>
+        <location filename="../utils.py" line="58"/>
         <source>{0} features selected on layer {1}</source>
         <translation>
             <numerusform>{0} entité sélectionnée sur la couche {1}</numerusform>
@@ -167,7 +167,7 @@
 <context>
     <name>MultiSelectionRadiusTool</name>
     <message>
-        <location filename="../maptools.py" line="453"/>
+        <location filename="../maptools.py" line="457"/>
         <source>Selection radius</source>
         <translation>Rayon de sélection</translation>
     </message>
@@ -175,34 +175,64 @@
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="../settingsdialog.py" line="73"/>
+        <location filename="../settingsdialog.py" line="95"/>
         <source>MultiLayer Select Settings</source>
         <translation>Paramètres de Multilayer Select</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="74"/>
+        <location filename="../settingsdialog.py" line="96"/>
         <source>Selection color</source>
         <translation>Couleur de sélection</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="75"/>
+        <location filename="../settingsdialog.py" line="97"/>
         <source>Set active layer from selected feature</source>
         <translation>Définir la couche active en fonction des entités sélectionnées</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="76"/>
+        <location filename="../settingsdialog.py" line="98"/>
         <source>Replace default selection actions (BETA)</source>
         <translation>Remplacer les actions de sélection par défaut (BETA)</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="77"/>
+        <location filename="../settingsdialog.py" line="99"/>
         <source>Display settings action on toolbar</source>
         <translation>Afficher l&apos;icone &quot;paramètres&quot; sur la barre d&apos;outils</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="78"/>
+        <location filename="../settingsdialog.py" line="106"/>
         <source>Ok</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../settingsdialog.py" line="100"/>
+        <source>Allow to define layers that will not be considered by the multiselection tools (i.e. vector basemaps)</source>
+        <translation>Permet de définir des couches qui ne seront pas utilisées par les outils de sélection (fonds de carte vectoriels par example)</translation>
+    </message>
+    <message>
+        <location filename="../settingsdialog.py" line="101"/>
+        <source>Included Layers</source>
+        <translation>Couches incluses</translation>
+    </message>
+    <message>
+        <location filename="../settingsdialog.py" line="102"/>
+        <source>If checked, the active layer will be handled by the selection tools even if it is unchecked in the list below</source>
+        <translation>Si coché, la couche active sera utilisée par les outils de sélection même si elle est décochée dans la liste ci-dessous</translation>
+    </message>
+    <message>
+        <location filename="../settingsdialog.py" line="103"/>
+        <source>Always include active layer</source>
+        <translation>Toujours inclure la couche active</translation>
+    </message>
+    <message>
+        <location filename="../settingsdialog.py" line="104"/>
+        <source>Include All</source>
+        <translation>Inclure tout</translation>
+    </message>
+    <message>
+        <location filename="../settingsdialog.py" line="105"/>
+        <source>Exclude All</source>
+        <translation>Exclure tout</translation>
     </message>
 </context>
 </TS>
