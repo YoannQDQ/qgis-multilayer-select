@@ -34,7 +34,8 @@ Settings dialog<a name="settings"></a>
    - If  *Exclude hidden layers* is checked (default), the selection tools will not select or deselect any feature belonging to hidden layers (unchecked in the QGIS layer tree view)
    - If  *Always include active layer* is checked (default), the active layer will not be ignored even if it is unchecked in the list.
 
-*Exclusion example*
+**Exclusion example**
+
 ![Exlusion Exmaple](./docs/exclusion.gif)
 
 *Copyright © 2020 Yoann Quenach de Quivillic*
