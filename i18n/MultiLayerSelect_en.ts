@@ -143,12 +143,12 @@
 <context>
     <name>MultiSelectTool</name>
     <message>
-        <location filename="../utils.py" line="48"/>
+        <location filename="../utils.py" line="52"/>
         <source>No features selected</source>
         <translation>No features selected</translation>
     </message>
     <message numerus="yes">
-        <location filename="../utils.py" line="64"/>
+        <location filename="../utils.py" line="68"/>
         <source>{0} features selected on layers {1}</source>
         <translation>
             <numerusform>{0} feature selected on layers {1}</numerusform>
@@ -156,7 +156,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../utils.py" line="58"/>
+        <location filename="../utils.py" line="62"/>
         <source>{0} features selected on layer {1}</source>
         <translation>
             <numerusform>{0} feature selected on layer {1}</numerusform>
@@ -167,7 +167,7 @@
 <context>
     <name>MultiSelectionRadiusTool</name>
     <message>
-        <location filename="../maptools.py" line="457"/>
+        <location filename="../maptools.py" line="460"/>
         <source>Selection radius</source>
         <translation>Selection radius</translation>
     </message>
@@ -175,64 +175,69 @@
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="../settingsdialog.py" line="95"/>
+        <location filename="../settingsdialog.py" line="98"/>
         <source>MultiLayer Select Settings</source>
         <translation>MultiLayer Select Settings</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="96"/>
+        <location filename="../settingsdialog.py" line="99"/>
         <source>Selection color</source>
         <translation>Selection color</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="97"/>
+        <location filename="../settingsdialog.py" line="100"/>
         <source>Set active layer from selected feature</source>
         <translation>Set active layer from selected feature</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="98"/>
+        <location filename="../settingsdialog.py" line="101"/>
         <source>Replace default selection actions (BETA)</source>
         <translation>Replace default selection actions (BETA)</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="99"/>
+        <location filename="../settingsdialog.py" line="102"/>
         <source>Display settings action on toolbar</source>
         <translation>Display settings action on toolbar</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="106"/>
+        <location filename="../settingsdialog.py" line="111"/>
         <source>Ok</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="100"/>
+        <location filename="../settingsdialog.py" line="103"/>
         <source>Allow to define layers that will not be considered by the multiselection tools (i.e. vector basemaps)</source>
         <translation>Allow to define layers that will not be considered by the multiselection tools (i.e. vector basemaps)</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="101"/>
+        <location filename="../settingsdialog.py" line="104"/>
         <source>Included Layers</source>
         <translation>Included Layers</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="102"/>
+        <location filename="../settingsdialog.py" line="107"/>
         <source>If checked, the active layer will be handled by the selection tools even if it is unchecked in the list below</source>
         <translation>If checked, the active layer will be handled by the selection tools even if it is unchecked in the list below</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="103"/>
+        <location filename="../settingsdialog.py" line="108"/>
         <source>Always include active layer</source>
         <translation>Always include active layer</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="104"/>
+        <location filename="../settingsdialog.py" line="109"/>
         <source>Include All</source>
         <translation>Include All</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="105"/>
+        <location filename="../settingsdialog.py" line="110"/>
         <source>Exclude All</source>
         <translation>Exclude All</translation>
+    </message>
+    <message>
+        <location filename="../settingsdialog.py" line="106"/>
+        <source>Exlude hidden layers</source>
+        <translation>Exlude hidden layers</translation>
     </message>
 </context>
 </TS>
