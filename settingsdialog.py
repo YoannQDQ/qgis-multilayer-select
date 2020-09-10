@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_SettingsDialog(object):
     def setupUi(self, SettingsDialog):
         SettingsDialog.setObjectName("SettingsDialog")
-        SettingsDialog.resize(279, 356)
+        SettingsDialog.resize(279, 359)
         self.verticalLayout = QtWidgets.QVBoxLayout(SettingsDialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.formLayout = QtWidgets.QFormLayout()
@@ -57,6 +57,9 @@ class Ui_SettingsDialog(object):
         self.groupBox.setObjectName("groupBox")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.groupBox)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.onlyVisibleCheckBox = QtWidgets.QCheckBox(self.groupBox)
+        self.onlyVisibleCheckBox.setObjectName("onlyVisibleCheckBox")
+        self.verticalLayout_2.addWidget(self.onlyVisibleCheckBox)
         self.includeActiveLayerCheckBox = QtWidgets.QCheckBox(self.groupBox)
         self.includeActiveLayerCheckBox.setObjectName("includeActiveLayerCheckBox")
         self.verticalLayout_2.addWidget(self.includeActiveLayerCheckBox)
@@ -99,6 +102,8 @@ class Ui_SettingsDialog(object):
         self.label_4.setText(_translate("SettingsDialog", "Display settings action on toolbar"))
         self.groupBox.setToolTip(_translate("SettingsDialog", "Allow to define layers that will not be considered by the multiselection tools (i.e. vector basemaps)"))
         self.groupBox.setTitle(_translate("SettingsDialog", "Included Layers"))
+        self.onlyVisibleCheckBox.setToolTip(_translate("SettingsDialog", "If checked, the active layer will be handled by the selection tools even if it is unchecked in the list below"))
+        self.onlyVisibleCheckBox.setText(_translate("SettingsDialog", "Exlude hidden layers"))
         self.includeActiveLayerCheckBox.setToolTip(_translate("SettingsDialog", "If checked, the active layer will be handled by the selection tools even if it is unchecked in the list below"))
         self.includeActiveLayerCheckBox.setText(_translate("SettingsDialog", "Always include active layer"))
         self.includeButton.setText(_translate("SettingsDialog", "Include All"))

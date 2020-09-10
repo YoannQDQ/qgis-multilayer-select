@@ -126,6 +126,9 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         )
         self.selectionColorButton.setColor(iface.mapCanvas().selectionColor())
 
+        self.onlyVisibleCheckBox.setChecked(
+            self.settings.value("only_visible", True, bool)
+        )
         self.activeLayerCheckBox.setChecked(
             self.settings.value("set_active_layer", True, bool)
         )
@@ -145,6 +148,7 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
 
         # Connect signals
         self.selectionColorButton.colorChanged.connect(self.on_color_changed)
+        self.onlyVisibleCheckBox.toggled.connect(self.on_only_visible_changed)
         self.activeLayerCheckBox.toggled.connect(self.on_active_layer_changed)
         self.showSettingsCheckBox.toggled.connect(self.on_show_settings_changed)
         self.replaceActionsCheckBox.toggled.connect(self.on_replace_actions_changed)
@@ -186,6 +190,11 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
 
         # Will trigger the icon color change
         self.colorChanged.emit()
+
+    def on_only_visible_changed(self, checked):
+        """ Update the only_visible setting """
+        self.settings.setValue("only_visible", checked)
+        self.settingsChanged.emit()
 
     def on_active_layer_changed(self, checked):
         """ Update the set_active_layer setting """

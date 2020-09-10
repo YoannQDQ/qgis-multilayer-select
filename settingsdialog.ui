@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>279</width>
-    <height>356</height>
+    <height>359</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -104,6 +104,16 @@
       <string>Included Layers</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QCheckBox" name="onlyVisibleCheckBox">
+        <property name="toolTip">
+         <string>If checked, the active layer will be handled by the selection tools even if it is unchecked in the list below</string>
+        </property>
+        <property name="text">
+         <string>Exlude hidden layers</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QCheckBox" name="includeActiveLayerCheckBox">
         <property name="toolTip">

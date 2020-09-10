@@ -92,7 +92,10 @@ class MultiSelectTool(QgsMapToolIdentify):
             modifiers (Qt.KeyboardModifiers): Which modifier keys are pressed
         """
 
-        layers = vector_layers()
+        if isinstance(geom, QgsPointXY):
+            layers = vector_layers(True)
+        else:
+            layers = vector_layers()
 
         if not layers:
             return
