@@ -310,17 +310,20 @@ class MultiLayerSelect:
         cfg = configparser.ConfigParser()
         cfg.read(os.path.join(os.path.dirname(__file__), "metadata.txt"))
         version = cfg.get("general", "version")
-
-        github_url = "https://github.com/YoannQDQ/qgis-multilayer-select"
+        homepage = cfg.get("general", "homepage")
+        tracker = cfg.get("general", "tracker")
+        repository = cfg.get("general", "repository")
 
         QMessageBox.about(
             bogus,
             self.tr("About Multilayer Select"),
-            "<b>Version</b> {1}<br><br>"
-            "<b>{2}</b> : <a href={0}>GitHub</a><br>"
-            "<b>{3}</b> : <a href={0}/issues>GitHub</a><br>"
-            "<b>{4}</b> : <a href={0}#multilayer-select-qgis-plugin>GitHub</a>".format(
-                github_url,
+            "<b>Version</b> {3}<br><br>"
+            "<b>{4}</b> : <a href={0}>GitHub</a><br>"
+            "<b>{5}</b> : <a href={1}>GitHub</a><br>"
+            "<b>{6}</b> : <a href={2}>GitHub Pages</a>".format(
+                repository,
+                tracker,
+                homepage,
                 version,
                 self.tr("Source code"),
                 self.tr("Report issues"),

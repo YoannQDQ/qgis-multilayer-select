@@ -75,6 +75,6 @@ def update_status_message():
 def icon_from_layer(layer: QgsMapLayer):
     """ Get the layer icon from the layer tree """
     layer_node = QgsProject.instance().layerTreeRoot().findLayer(layer)
-    treemodel = iface.layerTreeView().model()
+    treemodel = iface.layerTreeView().layerTreeModel()
     index = treemodel.node2index(layer_node)
     return treemodel.data(index, Qt.DecorationRole)
