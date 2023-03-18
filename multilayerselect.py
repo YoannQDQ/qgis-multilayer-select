@@ -353,7 +353,8 @@ class MultiLayerSelect:
         """ Called when the selection color has changed. Replace every icon """
         color = self.iface.mapCanvas().selectionColor()
         color = QColor.fromHsv(
-            color.hue(), color.saturation() * 0.9, color.value() * 0.95, color.alpha()
+            int(color.hue()), int(color.saturation() * 0.9),
+            int(color.value() * 0.95), int(color.alpha())
         )
         for i in range(len(self.select_actions)):
             path = self.actions_settings[i].icon

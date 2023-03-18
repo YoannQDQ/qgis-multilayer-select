@@ -15,7 +15,7 @@ def create_icon(icon_path, color, base_size=QSize(48, 48)):
     output_pixmap.fill(QColor("transparent"))
     painter = QPainter(output_pixmap)
 
-    ratio = base_size.width() / 48.0
+    ratio = int(base_size.width() / 48.0)
 
     base_icon = QIcon(icon_path)
     base_pixmap = base_icon.pixmap(base_size)
@@ -40,7 +40,7 @@ def select_all_icon(color, base_size=QSize(48, 48)):
     output_pixmap.fill(QColor("transparent"))
     painter = QPainter(output_pixmap)
 
-    ratio = base_size.width() / 48.0
+    ratio = int(base_size.width() / 48.0)
 
     stroke_color = color.darker()
     painter.setRenderHint(QPainter.Antialiasing)
@@ -106,7 +106,7 @@ def expression_select_icon(color, base_size=QSize(48, 48)):
     output_pixmap.fill(QColor("transparent"))
     painter = QPainter(output_pixmap)
 
-    ratio = base_size.width() / 48.0
+    ratio = int(base_size.width() / 48.0)
 
     base_icon = QIcon(":/plugins/multilayerselect/icons/selectExpression.svg")
     base_pixmap = base_icon.pixmap(base_size)
