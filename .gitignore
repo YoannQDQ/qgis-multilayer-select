@@ -1,0 +1,9 @@
+**/.mypy
+**/.pytest*
+**/__pycache__
+.coverage
+**/cov.xml
+*,cover
+*.code-workspace
+**/zip_build/*
+.venv
