@@ -1,122 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="fr" sourcelanguage="">
+<!DOCTYPE TS>
+<TS version="2.1" language="fr">
 <context>
     <name>MultiLayerSelect</name>
     <message>
-        <location filename="../multilayerselect.py" line="131"/>
-        <source>About</source>
-        <translation>À propos</translation>
-    </message>
-    <message>
-        <location filename="../multilayerselect.py" line="138"/>
-        <source>Settings</source>
-        <translation>Paramètres</translation>
-    </message>
-    <message>
-        <location filename="../multilayerselect.py" line="144"/>
-        <source>&lt;b&gt;Multilayer Select Settings&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Paramètres de Multilayer Select&lt;/b&gt;</translation>
-    </message>
-    <message>
-        <location filename="../multilayerselect.py" line="168"/>
+        <location filename="../multilayerselect.py" line="147"/>
         <source>Select Features</source>
         <translation>Sélectionner les entités</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="168"/>
+        <location filename="../multilayerselect.py" line="147"/>
         <source>&lt;b&gt;Select Features by area or single click&lt;/b&gt;</source>
         <translation>&lt;b&gt;Sélectionner les entités par rectangle ou par simple clic&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="175"/>
+        <location filename="../multilayerselect.py" line="154"/>
         <source>Select Features by Polygon</source>
         <translation>Sélectionner les entités par polygône</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="181"/>
+        <location filename="../multilayerselect.py" line="160"/>
         <source>Select Features by Freehand</source>
         <translation>Sélectionner les entités à main levée</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="187"/>
+        <location filename="../multilayerselect.py" line="166"/>
         <source>Select Features by Radius</source>
         <translation>Sélectionner les entités par rayon</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="220"/>
-        <source>Select all features from all layers</source>
-        <translation>Sélectionner toutes les entités de toutes les couches</translation>
-    </message>
-    <message>
-        <location filename="../multilayerselect.py" line="231"/>
-        <source>Invert selection for all layers</source>
-        <translation>Inverser la sélection pour toutes les couches</translation>
-    </message>
-    <message>
-        <location filename="../multilayerselect.py" line="252"/>
-        <source>Deselect features from all layers</source>
-        <translation>Désélectionner les entités de toutes les couches</translation>
-    </message>
-    <message>
-        <location filename="../multilayerselect.py" line="316"/>
+        <location filename="../multilayerselect.py" line="296"/>
         <source>About Multilayer Select</source>
         <translation>À propos de Multilayer Select</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="316"/>
+        <location filename="../multilayerselect.py" line="296"/>
         <source>Source code</source>
         <translation>Code source</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="316"/>
+        <location filename="../multilayerselect.py" line="296"/>
         <source>Report issues</source>
         <translation>Signaler un problème</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="316"/>
+        <location filename="../multilayerselect.py" line="296"/>
         <source>Documentation</source>
         <translation>Documentation</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="239"/>
+        <location filename="../multilayerselect.py" line="218"/>
         <source>Select Features by Expression...</source>
         <translation>Selectionner les entités par expression...</translation>
+    </message>
+    <message>
+        <location filename="../multilayerselect.py" line="118"/>
+        <source>Multilayer Select Settings</source>
+        <translation>Paramètres de Multilayer Select</translation>
+    </message>
+    <message>
+        <location filename="../multilayerselect.py" line="205"/>
+        <source>Select All Features from All Layers</source>
+        <translation>Sélectionner toutes les entités de toutes les couches</translation>
+    </message>
+    <message>
+        <location filename="../multilayerselect.py" line="212"/>
+        <source>Invert Selection for All Layers</source>
+        <translation>Inverser la sélection de toutes les couches</translation>
+    </message>
+    <message>
+        <location filename="../multilayerselect.py" line="230"/>
+        <source>Deselect Features from All Layers</source>
+        <translation>Déselectionner les entités de toutes les couches</translation>
     </message>
 </context>
 <context>
     <name>MultiLayerSelectionExpressionBuilder</name>
     <message>
-        <location filename="../multiselectionexpressionbuilder.py" line="70"/>
+        <location filename="../multiselectionexpressionbuilder.py" line="69"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
     <message>
-        <location filename="../multiselectionexpressionbuilder.py" line="73"/>
+        <location filename="../multiselectionexpressionbuilder.py" line="72"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
     <message>
-        <location filename="../multiselectionexpressionbuilder.py" line="80"/>
+        <location filename="../multiselectionexpressionbuilder.py" line="77"/>
         <source>Select Features</source>
         <translation>Sélectionner les entités</translation>
     </message>
     <message>
-        <location filename="../multiselectionexpressionbuilder.py" line="84"/>
+        <location filename="../multiselectionexpressionbuilder.py" line="81"/>
         <source>Add to selection</source>
         <translation>Ajouter à la sélection</translation>
     </message>
     <message>
-        <location filename="../multiselectionexpressionbuilder.py" line="88"/>
+        <location filename="../multiselectionexpressionbuilder.py" line="85"/>
         <source>Remove from selection</source>
         <translation>Supprimer de la sélection</translation>
     </message>
     <message>
-        <location filename="../multiselectionexpressionbuilder.py" line="92"/>
+        <location filename="../multiselectionexpressionbuilder.py" line="89"/>
         <source>Filter selection</source>
         <translation>Filtrer la sélection</translation>
     </message>
     <message>
-        <location filename="../multiselectionexpressionbuilder.py" line="214"/>
+        <location filename="../multiselectionexpressionbuilder.py" line="199"/>
         <source>No matching features found</source>
         <translation>Aucune entité correspondant à l&apos;expression</translation>
     </message>
@@ -126,7 +117,7 @@
         <translation>Aide</translation>
     </message>
     <message numerus="yes">
-        <location filename="../multiselectionexpressionbuilder.py" line="202"/>
+        <location filename="../multiselectionexpressionbuilder.py" line="187"/>
         <source>Zoomed to {0} matching feature(s)</source>
         <comment>matching feature count</comment>
         <translation>
@@ -135,7 +126,7 @@
         </translation>
     </message>
     <message>
-        <location filename="../multiselectionexpressionbuilder.py" line="65"/>
+        <location filename="../multiselectionexpressionbuilder.py" line="64"/>
         <source>Only use active layer</source>
         <translation>Utiliser seulement la couche active</translation>
     </message>
@@ -143,12 +134,12 @@
 <context>
     <name>MultiSelectTool</name>
     <message>
-        <location filename="../utils.py" line="52"/>
+        <location filename="../utils.py" line="50"/>
         <source>No features selected</source>
         <translation>Aucune entité séléctionnée</translation>
     </message>
     <message numerus="yes">
-        <location filename="../utils.py" line="68"/>
+        <location filename="../utils.py" line="64"/>
         <source>{0} features selected on layers {1}</source>
         <translation>
             <numerusform>{0} entité sélectionnée sur les couches {1}</numerusform>
@@ -156,7 +147,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../utils.py" line="62"/>
+        <location filename="../utils.py" line="58"/>
         <source>{0} features selected on layer {1}</source>
         <translation>
             <numerusform>{0} entité sélectionnée sur la couche {1}</numerusform>
@@ -167,7 +158,7 @@
 <context>
     <name>MultiSelectionRadiusTool</name>
     <message>
-        <location filename="../maptools.py" line="460"/>
+        <location filename="../maptools.py" line="427"/>
         <source>Selection radius</source>
         <translation>Rayon de sélection</translation>
     </message>
