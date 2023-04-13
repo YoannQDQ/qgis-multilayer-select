@@ -20,42 +20,28 @@
  *                                                                         *
  ***************************************************************************/
 """
-import os
 import configparser
+import os
 from functools import partial
 
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
-from qgis.PyQt.QtGui import QIcon, QColor
-from qgis.PyQt.QtWidgets import (
-    QAction,
-    QMessageBox,
-    QWidget,
-    QToolBar,
-    QToolButton,
-)
+from qgis.core import Qgis, QgsProject, QgsProjectVersion, QgsVectorLayer
+from qgis.gui import QgsGui
+from qgis.PyQt.QtCore import QCoreApplication, QObject, QSettings, QTranslator
+from qgis.PyQt.QtGui import QColor, QIcon
+from qgis.PyQt.QtWidgets import QAction, QMessageBox, QToolBar, QToolButton, QWidget
 
-from qgis.core import QgsProject, QgsVectorLayer
-
-from .settingsdialogimpl import SettingsDialog
-from .icon_utils import (
-    create_icon,
-    select_all_icon,
-    invert_selection_icon,
-    expression_select_icon,
-)
+from .icon_utils import create_icon, expression_select_icon, invert_selection_icon, select_all_icon
 from .maptools import (
     MultiSelectionAreaTool,
+    MultiSelectionFreehandTool,
     MultiSelectionPolygonTool,
     MultiSelectionRadiusTool,
-    MultiSelectionFreehandTool,
     update_status_message,
 )
-
-from .utils import vector_layers
-
 from .multiselectionexpressionbuilder import MultiLayerSelectionExpressionBuilder
-
 from .resources import *  # noqa
+from .settingsdialogimpl import SettingsDialog
+from .utils import vector_layers
 
 
 class MultiLayerSelect:
@@ -85,6 +71,9 @@ class MultiLayerSelect:
         # Init settings
         self.settings = QSettings()
         self.settings.beginGroup("plugins/multilayerselect")
+
+        self.action_container = QObject()
+        self.action_container.setObjectName("MultiLayerSelect")
 
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
@@ -121,18 +110,17 @@ class MultiLayerSelect:
 
         self.about_action = QAction(
             QIcon(":/plugins/multilayerselect/icons/about.svg"),
-            self.tr("About"),
-            parent=self.iface.mainWindow(),
+            self.tr("About Multilayer Select"),
+            parent=self.action_container,
         )
         self.about_action.triggered.connect(self.show_about)
 
         self.settings_action = QAction(
             QIcon(":/images/themes/default/console/iconSettingsConsole.svg"),
-            self.tr("Settings"),
-            parent=self.iface.mainWindow(),
+            self.tr("Multilayer Select Settings"),
+            parent=self.action_container,
         )
         self.settings_action.setObjectName("actionMultiLayerSelectSettings")
-        self.settings_action.setToolTip(self.tr("<b>Multilayer Select Settings</b>"))
 
         self.settings_action.triggered.connect(self.show_settings)
 
@@ -191,8 +179,16 @@ class MultiLayerSelect:
 
         self.select_actions = []
 
+        # Hack to make the shortcut work before QGIS 3.32
+        # Pior to 3.31, if two QAction share the same text, the Shortcut is applied to both.
+        # Consequently, when the shortcut is triggered, neither are called (Ambiguous trigger)
+        # See https://github.com/qgis/QGIS/pull/51593
+        disambiguator = ""
+        if not QgsProjectVersion(Qgis.version()) >= QgsProjectVersion("3.31"):
+            disambiguator = " "
+
         for select_action in self.actions_settings:
-            action = QAction(select_action.text)
+            action = QAction(select_action.text + disambiguator, parent=self.action_container)
             action.setToolTip(select_action.tooltip)
             action.setObjectName(select_action.objectname)
             action.setCheckable(True)
@@ -206,18 +202,14 @@ class MultiLayerSelect:
 
         self.toolbar.addWidget(self.selection_tool_button)
 
-        self.select_all_action = QAction(
-            self.tr("Select all features from all layers"),
-        )
+        self.select_all_action = QAction(self.tr("Select All Features from All Layers"), parent=self.action_container)
         self.select_all_action.setToolTip("<b>{}</b>".format(self.select_all_action.text()))
         self.select_all_action.setObjectName("actionMultiSelectAll")
         self.select_all_action.triggered.connect(self.select_all)
         self.advanced_selection_tool_button.addAction(self.select_all_action)
         self.advanced_selection_tool_button.setDefaultAction(self.select_all_action)
 
-        self.invert_all_action = QAction(
-            self.tr("Invert selection for all layers"),
-        )
+        self.invert_all_action = QAction(self.tr("Invert Selection for All Layers"), parent=self.action_container)
         self.invert_all_action.setToolTip("<b>{}</b>".format(self.invert_all_action.text()))
         self.invert_all_action.setObjectName("actionMultiSelectInvert")
         self.invert_all_action.triggered.connect(self.invert_all)
@@ -225,7 +217,8 @@ class MultiLayerSelect:
 
         self.select_by_expr_action = QAction(
             QIcon(":/images/themes/default/mIconExpressionSelect.svg"),
-            self.tr("Select Features by Expression..."),
+            self.tr("Select Features by Expression...") + disambiguator,
+            parent=self.action_container,
         )
         self.select_by_expr_action.setToolTip("<b>{}</b>".format(self.select_by_expr_action.text()))
         self.select_by_expr_action.setObjectName("actionMultiSelectExpr")
@@ -234,7 +227,9 @@ class MultiLayerSelect:
 
         self.toolbar.addWidget(self.advanced_selection_tool_button)
 
-        self.deselect_all_action = QAction(self.tr("Deselect features from all layers"))
+        self.deselect_all_action = QAction(
+            self.tr("Deselect Features from All Layers") + disambiguator, parent=self.action_container
+        )
         self.deselect_all_action.setToolTip("<b>{}</b>".format(self.deselect_all_action.text()))
         self.deselect_all_action.setObjectName("actionDeselectAll")
         self.deselect_all_action.triggered.connect(self.deselect_all)
@@ -252,6 +247,8 @@ class MultiLayerSelect:
 
         self.on_color_changed()
         self.on_settings_changed()
+
+        QgsGui.shortcutsManager().registerAllChildren(self.action_container)
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -278,6 +275,9 @@ class MultiLayerSelect:
 
         except AttributeError:  # QGIS < 3.10
             pass
+
+        for action in self.action_container.children():
+            action.deleteLater()
 
     def show_about(self):
         """Show the about dialog"""
