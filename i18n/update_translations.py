@@ -30,6 +30,4 @@ if __name__ == "__main__":
         PATHS = []
         for filepath in Path("..").rglob("*.py"):
             PATHS.append(f'"{filepath}"')
-        os.system(
-            f"pylupdate5 -verbose -noobsolete {' '.join(PATHS)} -ts {get_ts_list()}"
-        )
+        os.system(f"pylupdate5 -verbose -noobsolete {' '.join(PATHS)} -ts {get_ts_list()}")

@@ -2,15 +2,18 @@
 
 import math
 
-from PyQt5.QtCore import QSize, QPointF
-from PyQt5.QtGui import QIcon, QColor, QPainter, QPixmap, QPen, QPolygonF, QCursor
+from qgis.PyQt.QtCore import QSize, QPointF
+from qgis.PyQt.QtGui import QIcon, QColor, QPainter, QPixmap, QPen, QPolygonF, QCursor
 
 from qgis.core import Qgis, QgsApplication
 
 
-def create_icon(icon_path, color, base_size=QSize(48, 48)):
-    """ Create a selection tool icon. Paint the icon specified by icon_path over
-    A small colored rectangle """
+DEFAULT_ICON_SIZE = QSize(48, 48)
+
+
+def create_icon(icon_path, color, base_size=DEFAULT_ICON_SIZE):
+    """Create a selection tool icon. Paint the icon specified by icon_path over
+    A small colored rectangle"""
     output_pixmap = QPixmap(base_size)
     output_pixmap.fill(QColor("transparent"))
     painter = QPainter(output_pixmap)
@@ -34,8 +37,8 @@ def create_icon(icon_path, color, base_size=QSize(48, 48)):
     return icon
 
 
-def select_all_icon(color, base_size=QSize(48, 48)):
-    """ Create the QGIS Select All icon with a dynamic color """
+def select_all_icon(color, base_size=DEFAULT_ICON_SIZE):
+    """Create the QGIS Select All icon with a dynamic color"""
     output_pixmap = QPixmap(base_size)
     output_pixmap.fill(QColor("transparent"))
     painter = QPainter(output_pixmap)
@@ -57,8 +60,8 @@ def select_all_icon(color, base_size=QSize(48, 48)):
     return icon
 
 
-def invert_selection_icon(color, base_size=QSize(48, 48)):
-    """ Create the QGIS Invert Selecion icon with a dynamic color """
+def invert_selection_icon(color, base_size=DEFAULT_ICON_SIZE):
+    """Create the QGIS Invert Selecion icon with a dynamic color"""
     output_pixmap = QPixmap(base_size)
     output_pixmap.fill(QColor("transparent"))
     painter = QPainter(output_pixmap)
@@ -100,8 +103,8 @@ def invert_selection_icon(color, base_size=QSize(48, 48)):
     return icon
 
 
-def expression_select_icon(color, base_size=QSize(48, 48)):
-    """ Create the expression icon """
+def expression_select_icon(color, base_size=DEFAULT_ICON_SIZE):
+    """Create the expression icon"""
     output_pixmap = QPixmap(base_size)
     output_pixmap.fill(QColor("transparent"))
     painter = QPainter(output_pixmap)
@@ -126,7 +129,7 @@ def expression_select_icon(color, base_size=QSize(48, 48)):
 
 
 def cursor_from_image(path, active_x=6, active_y=6):
-    """ Create a QCursor from an icon. active_x and active_y set the cursor hotpoint """
+    """Create a QCursor from an icon. active_x and active_y set the cursor hotpoint"""
 
     # All calculations are done on 32x32 icons
     # Defaults to center, individual cursors may override
@@ -135,11 +138,7 @@ def cursor_from_image(path, active_x=6, active_y=6):
 
     if not icon.isNull():
         # Apply scaling
-        scale = (
-            Qgis.UI_SCALE_FACTOR
-            * QgsApplication.instance().fontMetrics().height()
-            / 32.0
-        )
+        scale = Qgis.UI_SCALE_FACTOR * QgsApplication.instance().fontMetrics().height() / 32.0
         cursor = QCursor(
             icon.pixmap(math.ceil(scale * 32), math.ceil(scale * 32)),
             math.ceil(scale * active_x),

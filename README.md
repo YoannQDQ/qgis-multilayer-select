@@ -38,4 +38,3 @@ Settings dialog<a name="settings"></a>
 ![Exlusion Exmaple](./docs/exclusion.gif)
 
 *Copyright © 2020 Yoann Quenach de Quivillic*
-

@@ -2,8 +2,8 @@
 
 import math
 
-from PyQt5.QtCore import Qt, QSettings, QPoint, pyqtSignal, QEvent
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QSizePolicy
+from qgis.PyQt.QtCore import Qt, QSettings, QPoint, pyqtSignal, QEvent
+from qgis.PyQt.QtWidgets import QWidget, QHBoxLayout, QLabel, QSizePolicy
 
 from qgis.core import (
     QgsGeometry,
@@ -32,14 +32,11 @@ def has_moved(pos1: QPoint, pos2: QPoint, pixel_threshold=10):
     Returns:
         bool: True if the position has changed
     """
-    return (
-        math.sqrt(math.pow(pos1.x() - pos2.x(), 2) + math.pow(pos1.y() - pos2.y(), 2))
-        > pixel_threshold
-    )
+    return math.sqrt(math.pow(pos1.x() - pos2.x(), 2) + math.pow(pos1.y() - pos2.y(), 2)) > pixel_threshold
 
 
 class MultiSelectTool(QgsMapToolIdentify):
-    """ Base class for multi selection tools """
+    """Base class for multi selection tools"""
 
     def __init__(self, canvas):
         super().__init__(canvas)
@@ -51,11 +48,11 @@ class MultiSelectTool(QgsMapToolIdentify):
         self.rubber2 = QgsRubberBand(canvas, QgsWkbTypes.PolygonGeometry)
 
     def flags(self):
-        """ Override to disable ZoomRect """
+        """Override to disable ZoomRect"""
         return QgsMapTool.Flag()
 
     def on_map_tool_set(self, new_tool, old_tool):
-        """ Reset the tool when another one is set and update the status message """
+        """Reset the tool when another one is set and update the status message"""
         if new_tool == self:
             iface.statusBarIface().showMessage(self.status_message)
         elif old_tool == self:
@@ -63,7 +60,7 @@ class MultiSelectTool(QgsMapToolIdentify):
             iface.statusBarIface().clearMessage()
 
     def refresh_color(self):
-        """ Update the rubberbands color """
+        """Update the rubberbands color"""
         stroke_color = self.canvas().selectionColor().darker(150)
         fill_color = self.canvas().selectionColor()
         fill_color.setAlphaF(0.2)
@@ -76,12 +73,12 @@ class MultiSelectTool(QgsMapToolIdentify):
         self.rubber2.setWidth(1)
 
     def reset(self):
-        """ Reset the rubberbands """
+        """Reset the rubberbands"""
         self.rubber.reset(QgsWkbTypes.PolygonGeometry)
         self.rubber2.reset(QgsWkbTypes.PolygonGeometry)
 
     def __del__(self):
-        """ Reset the tool when it is destroyed """
+        """Reset the tool when it is destroyed"""
         self.reset()
 
     def select(self, geom, modifiers):
@@ -125,14 +122,11 @@ class MultiSelectTool(QgsMapToolIdentify):
                 selected_dict[res.mLayer][1].append(res.mFeature.id())
 
             for layer, (_, new) in selected_dict.items():
-
                 # If shift or ctrl pressed: toggle selection
                 if shift or ctrl:
                     layer.selectByIds(
                         new,
-                        QgsVectorLayer.RemoveFromSelection
-                        if was_selected
-                        else QgsVectorLayer.AddToSelection,
+                        QgsVectorLayer.RemoveFromSelection if was_selected else QgsVectorLayer.AddToSelection,
                     )
 
                 # Otherwise, clear previous selection and select the clicked feature
@@ -152,7 +146,6 @@ class MultiSelectTool(QgsMapToolIdentify):
                 selected_dict[res.mLayer][1].append(res.mFeature.id())
 
             for layer, (_, new) in selected_dict.items():
-
                 # SHIFT: Add newly selected features to selection
                 if shift:
                     layer.selectByIds(new, QgsVectorLayer.AddToSelection)
@@ -166,7 +159,7 @@ class MultiSelectTool(QgsMapToolIdentify):
         # Get the list of layers with at least one selected feature
         active_layers = []
         total_selected_feature_count = 0
-        for layer, (_, new) in selected_dict.items():
+        for layer, _ in selected_dict.items():
             count = layer.selectedFeatureCount()
             if count > 0:
                 total_selected_feature_count += count
@@ -177,9 +170,7 @@ class MultiSelectTool(QgsMapToolIdentify):
         if (
             active_layers
             and iface.activeLayer() not in active_layers
-            and QSettings().value(
-                "plugins/multilayerselect/set_active_layer", True, bool
-            )
+            and QSettings().value("plugins/multilayerselect/set_active_layer", True, bool)
         ):
             iface.setActiveLayer(active_layers[0])
 
@@ -187,50 +178,42 @@ class MultiSelectTool(QgsMapToolIdentify):
         update_status_message()
 
     def keyPressEvent(self, event):
-        """ Called when the Escape key is pressed. Reset the tool """
-        # pylint: disable=invalid-name
+        """Called when the Escape key is pressed. Reset the tool"""
         if event.key() == Qt.Key_Escape:
             self.reset()
 
 
 class MultiSelectionAreaTool(MultiSelectTool):
-    """ Point or Rectangle multi selection tool """
+    """Point or Rectangle multi selection tool"""
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(
-            cursor_from_image(
-                ":/plugins/multilayerselect/icons/selectRectangleCursor.svg"
-            )
-        )
+        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectRectangleCursor.svg"))
         self.ref_point = None
         self.ref_pos = None
 
     def canvasPressEvent(self, event):
-        """ Called when the mouse is pressed. Set the ref point """
-        # pylint: disable=invalid-name
+        """Called when the mouse is pressed. Set the ref point"""
         self.ref_pos = event.pos()
         self.ref_point = self.toMapCoordinates(event.pos())
         self.refresh_color()
 
     def canvasMoveEvent(self, event):
-        """ Called when the mouse is moved. Do nothing if no ref point """
-        # pylint: disable=invalid-name
+        """Called when the mouse is moved. Do nothing if no ref point"""
 
         # If there is a ref point, draw the selection rectangle
         if self.ref_point:
             self.rubber.reset(QgsWkbTypes.PolygonGeometry)
             point = self.toMapCoordinates(event.pos())
-            minX = min(point.x(), self.ref_point.x())
-            maxX = max(point.x(), self.ref_point.x())
-            minY = min(point.y(), self.ref_point.y())
-            maxY = max(point.y(), self.ref_point.y())
-            rect = QgsRectangle(minX, minY, maxX, maxY)
+            min_x = min(point.x(), self.ref_point.x())
+            max_x = max(point.x(), self.ref_point.x())
+            min_y = min(point.y(), self.ref_point.y())
+            max_y = max(point.y(), self.ref_point.y())
+            rect = QgsRectangle(min_x, min_y, max_x, max_y)
             self.rubber.addGeometry(QgsGeometry.fromRect(rect), None)
 
     def canvasReleaseEvent(self, event):
-        """ Called when the mouse is released """
-        # pylint: disable=invalid-name
+        """Called when the mouse is released"""
 
         # No layer, cancel selection
         layer = self.canvas().currentLayer()
@@ -241,7 +224,6 @@ class MultiSelectionAreaTool(MultiSelectTool):
         point = self.toMapCoordinates(event.pos())
 
         if event.button() == Qt.LeftButton:
-
             # If there is a reference point, and cursor has moved since
             # select by rectangle
             if self.ref_point and has_moved(self.ref_pos, event.pos()):
@@ -255,27 +237,22 @@ class MultiSelectionAreaTool(MultiSelectTool):
             self.reset()
 
     def reset(self):
-        """ Reset the rubber and ref points """
+        """Reset the rubber and ref points"""
         super().reset()
         self.ref_point = None
         self.ref_pos = None
 
 
 class MultiSelectionPolygonTool(MultiSelectTool):
-    """ Polygon multi selection tool. Handle freehand drawing if mouse is pressed """
+    """Polygon multi selection tool. Handle freehand drawing if mouse is pressed"""
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(
-            cursor_from_image(
-                ":/plugins/multilayerselect/icons/selectPolygonCursor.svg"
-            )
-        )
+        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectPolygonCursor.svg"))
         self.pressed = False
 
     def canvasPressEvent(self, event):
-        """ Called when the mouse is pressed """
-        # pylint: disable=invalid-name
+        """Called when the mouse is pressed"""
 
         if event.button() == Qt.LeftButton:
             if self.rubber.numberOfVertices() == 0:
@@ -296,13 +273,11 @@ class MultiSelectionPolygonTool(MultiSelectTool):
             self.reset()
 
     def canvasReleaseEvent(self, event):
-        """ Called when the mouse is released """
-        # pylint: disable=unused-argument,invalid-name
+        """Called when the mouse is released"""
         self.pressed = False
 
     def canvasMoveEvent(self, event):
-        """ Called when the mouse is moved """
-        # pylint: disable=invalid-name
+        """Called when the mouse is moved"""
 
         # Get the QgsPoint from the event position
         point = self.toMapCoordinates(event.pos())
@@ -318,11 +293,11 @@ class MultiSelectionPolygonTool(MultiSelectTool):
 
 
 class DistanceWidget(QWidget):
-    """ Widget used to manually edit the selection radius"""
+    """Widget used to manually edit the selection radius"""
 
-    distanceChanged = pyqtSignal(float)
-    distanceEditingFinished = pyqtSignal(Qt.KeyboardModifiers)
-    distanceEditingCanceled = pyqtSignal()
+    distanceChanged = pyqtSignal(float)  # noqa: N815
+    distanceEditingFinished = pyqtSignal(Qt.KeyboardModifiers)  # noqa: N815
+    distanceEditingCanceled = pyqtSignal()  # noqa: N815
 
     def __init__(self, label, parent=None):
         super().__init__(parent)
@@ -353,22 +328,19 @@ class DistanceWidget(QWidget):
         self.setFocusProxy(self.spinbox)
 
     def set_distance(self, distance):
-        """ set the selection radius """
+        """set the selection radius"""
         self.spinbox.setValue(distance)
         self.spinbox.selectAll()
 
     def distance(self):
-        """ return he selection radius """
+        """return he selection radius"""
         return self.spinbox.value()
 
     def eventFilter(self, obj, event):
-        """ Intercept key press event to emit our own custom signals """
-        # pylint: disable=invalid-name
+        """Intercept key press event to emit our own custom signals"""
 
         if obj is self.spinbox and event.type() == QEvent.KeyPress:
-
             if event.key() == Qt.Key_Escape:
-
                 self.distanceEditingCanceled.emit()
                 return True
 
@@ -382,19 +354,16 @@ class DistanceWidget(QWidget):
 
 
 class MultiSelectionRadiusTool(MultiSelectTool):
-    """ Circle multi selection tool """
+    """Circle multi selection tool"""
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(
-            cursor_from_image(":/plugins/multilayerselect/icons/selectRadiusCursor.svg")
-        )
+        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectRadiusCursor.svg"))
         self.center_point = None
         self.distance_widget: DistanceWidget = None
 
     def canvasMoveEvent(self, event):
-        """ Called when the mouse is moved. Do nothing no center point """
-        # pylint: disable=invalid-name
+        """Called when the mouse is moved. Do nothing no center point"""
 
         # If a center point was set, update the rubberband to draw the circle
         if self.center_point:
@@ -403,8 +372,7 @@ class MultiSelectionRadiusTool(MultiSelectTool):
             self.distance_widget.set_distance(radius)
 
     def canvasReleaseEvent(self, event):
-        """ Called when the mouse is released """
-        # pylint: disable=invalid-name
+        """Called when the mouse is released"""
 
         # Cancel the selection on right click
         if event.button() == Qt.RightButton:
@@ -425,20 +393,20 @@ class MultiSelectionRadiusTool(MultiSelectTool):
         self.validate(event.modifiers())
 
     def validate(self, modifiers):
-        """ Validate the current selection with the KeyboardModifiers """
+        """Validate the current selection with the KeyboardModifiers"""
         geometry = self.rubber.asGeometry()
         self.select(geometry, modifiers)
         self.reset()
 
     def reset(self):
-        """ Reset the rubbers and center point """
+        """Reset the rubbers and center point"""
         super().reset()
         self.center_point = None
         self.delete_distance_widget()
 
     def update_radius_rubberband(self, radius):
-        """ Update the rubber band to draw a circle centered on self.center_point
-        with radius """
+        """Update the rubber band to draw a circle centered on self.center_point
+        with radius"""
 
         self.rubber.reset(QgsWkbTypes.PolygonGeometry)
 
@@ -454,7 +422,7 @@ class MultiSelectionRadiusTool(MultiSelectTool):
         self.rubber.closePoints(True)
 
     def create_distance_widget(self):
-        """ Create the radius edition widget """
+        """Create the radius edition widget"""
         self.delete_distance_widget()
         self.distance_widget = DistanceWidget(self.tr("Selection radius"))
 
@@ -467,34 +435,28 @@ class MultiSelectionRadiusTool(MultiSelectTool):
         self.distance_widget.setFocus(Qt.TabFocusReason)
 
     def delete_distance_widget(self):
-        """ Delete the radius edition widget """
+        """Delete the radius edition widget"""
         if self.distance_widget:
             self.distance_widget.deleteLater()
             self.distance_widget = None
 
 
 class MultiSelectionFreehandTool(MultiSelectTool):
-    """ Freehand multi selection tool """
+    """Freehand multi selection tool"""
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(
-            cursor_from_image(
-                ":/plugins/multilayerselect/icons/selectFreehandCursor.svg"
-            )
-        )
+        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectFreehandCursor.svg"))
         self.ref_point = None
 
     def canvasMoveEvent(self, event):
-        """ Called when the mouse is moved. Do nothing if no ref point """
-        # pylint: disable=invalid-name
+        """Called when the mouse is moved. Do nothing if no ref point"""
         if self.ref_point:
             point = self.toMapCoordinates(event.pos())
             self.rubber.addPoint(point)
 
     def canvasReleaseEvent(self, event):
-        """ Called when the mouse is released."""
-        # pylint: disable=invalid-name
+        """Called when the mouse is released."""
 
         # If right button is clicked, cancel selection
         if event.button() == Qt.RightButton:
@@ -519,6 +481,6 @@ class MultiSelectionFreehandTool(MultiSelectTool):
         self.reset()
 
     def reset(self):
-        """ Reset the selection tool (rubberbands and ref point) """
+        """Reset the selection tool (rubberbands and ref point)"""
         super().reset()
         self.ref_point = None

@@ -7,9 +7,9 @@ Allow to define:
 """
 from collections import Counter
 
-from PyQt5.QtCore import pyqtSignal, QSettings, Qt
-from PyQt5.QtGui import QColor, QIcon
-from PyQt5.QtWidgets import QDialog
+from qgis.PyQt.QtCore import pyqtSignal, QSettings, Qt
+from qgis.PyQt.QtGui import QColor, QIcon
+from qgis.PyQt.QtWidgets import QDialog
 
 from qgis.utils import iface
 from qgis.core import QgsMapLayerProxyModel, QgsMapLayerModel, QgsProject
@@ -19,15 +19,15 @@ from .utils import icon_from_layer
 
 
 class LayerModel(QgsMapLayerProxyModel):
-    """ Checkable Layer Model to include / exclude vector layers from the multilayer
-    selection tools """
+    """Checkable Layer Model to include / exclude vector layers from the multilayer
+    selection tools"""
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
     def name_list(self):
-        """ Return the list of vector layer names """
+        """Return the list of vector layer names"""
         names = []
         for i in range(self.rowCount()):
             names.append(super().data(self.index(i, 0)))
@@ -35,49 +35,41 @@ class LayerModel(QgsMapLayerProxyModel):
         return names
 
     def non_unique_names(self):
-        """ Return the list of non-unique vector layer names """
+        """Return the list of non-unique vector layer names"""
         return [k for k, v in Counter(self.name_list()).items() if v > 1]
 
     def include_all(self):
-        """ Include all layers in the multiselection tools (default behavior)
-        Remove the custom property from every layers """
+        """Include all layers in the multiselection tools (default behavior)
+        Remove the custom property from every layers"""
         for layer in QgsProject.instance().mapLayers().values():
             layer.removeCustomProperty("plugins/multilayerselect/excluded")
-        self.dataChanged.emit(
-            self.index(0, 0), self.index(self.rowCount(), 0), [Qt.CheckStateRole]
-        )
+        self.dataChanged.emit(self.index(0, 0), self.index(self.rowCount(), 0), [Qt.CheckStateRole])
 
     def exlude_all(self):
-        """ Exclude all layers from the multiselection tools
-        This is done by addinf a custom property on the layers """
+        """Exclude all layers from the multiselection tools
+        This is done by addinf a custom property on the layers"""
         for layer in QgsProject.instance().mapLayers().values():
             layer.setCustomProperty("plugins/multilayerselect/excluded", True)
-        self.dataChanged.emit(
-            self.index(0, 0), self.index(self.rowCount(), 0), [Qt.CheckStateRole]
-        )
+        self.dataChanged.emit(self.index(0, 0), self.index(self.rowCount(), 0), [Qt.CheckStateRole])
 
     def flags(self, index):
-        """ Make the model checkable """
-        # pylint: disable=unused-argument
+        """Make the model checkable"""
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsUserCheckable
 
     def setData(self, index, value, role=Qt.DisplayRole):
-        """ When checking an item, set the matching layer's custom property """
-        # pylint: disable=invalid-name
+        """When checking an item, set the matching layer's custom property"""
         layer = super().data(index, QgsMapLayerModel.LayerRole)
         if not layer:
             return super().setData(index, value, role)
 
         if role == Qt.CheckStateRole:
-            layer.setCustomProperty(
-                "plugins/multilayerselect/excluded", value == Qt.Unchecked
-            )
+            layer.setCustomProperty("plugins/multilayerselect/excluded", value == Qt.Unchecked)
             return True
 
         return super().setData(index, value, role)
 
     def data(self, index, role=Qt.DisplayRole):
-        """ Custom data function """
+        """Custom data function"""
         layer = super().data(index, QgsMapLayerModel.LayerRole)
         if not layer:
             return super().data(index, role)
@@ -93,19 +85,17 @@ class LayerModel(QgsMapLayerProxyModel):
             return icon_from_layer(layer)
 
         if role == Qt.CheckStateRole:
-            excluded = layer.customProperty(
-                "plugins/multilayerselect/excluded", False
-            ) in (True, "true", "True", "1")
+            excluded = layer.customProperty("plugins/multilayerselect/excluded", False) in (True, "true", "True", "1")
             return 0 if excluded else 2
 
         return super().data(index, role)
 
 
 class SettingsDialog(QDialog, Ui_SettingsDialog):
-    """ Settings Dialog implementation """
+    """Settings Dialog implementation"""
 
-    settingsChanged = pyqtSignal()
-    colorChanged = pyqtSignal()
+    settingsChanged = pyqtSignal()  # noqa: N815
+    colorChanged = pyqtSignal()  # noqa: N815
 
     def __init__(self, settings, parent=None):
         super().__init__(parent)
@@ -121,27 +111,15 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         blue = qgis_settings.value("qgis/default_selection_color_blue", 0, int)
         alpha = qgis_settings.value("qgis/default_selection_color_alpha", 255, int)
 
-        self.selectionColorButton.setDefaultColor(
-            QColor.fromRgb(red, green, blue, alpha)
-        )
+        self.selectionColorButton.setDefaultColor(QColor.fromRgb(red, green, blue, alpha))
         self.selectionColorButton.setColor(iface.mapCanvas().selectionColor())
 
-        self.onlyVisibleCheckBox.setChecked(
-            self.settings.value("only_visible", True, bool)
-        )
-        self.activeLayerCheckBox.setChecked(
-            self.settings.value("set_active_layer", True, bool)
-        )
-        self.showSettingsCheckBox.setChecked(
-            self.settings.value("show_settings", True, bool)
-        )
-        self.replaceActionsCheckBox.setChecked(
-            self.settings.value("replace_actions", False, bool)
-        )
+        self.onlyVisibleCheckBox.setChecked(self.settings.value("only_visible", True, bool))
+        self.activeLayerCheckBox.setChecked(self.settings.value("set_active_layer", True, bool))
+        self.showSettingsCheckBox.setChecked(self.settings.value("show_settings", True, bool))
+        self.replaceActionsCheckBox.setChecked(self.settings.value("replace_actions", False, bool))
 
-        self.includeActiveLayerCheckBox.setChecked(
-            self.settings.value("always_include_active_layer", True, bool)
-        )
+        self.includeActiveLayerCheckBox.setChecked(self.settings.value("always_include_active_layer", True, bool))
 
         self.layer_model = LayerModel(self)
         self.view.setModel(self.layer_model)
@@ -152,22 +130,20 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         self.activeLayerCheckBox.toggled.connect(self.on_active_layer_changed)
         self.showSettingsCheckBox.toggled.connect(self.on_show_settings_changed)
         self.replaceActionsCheckBox.toggled.connect(self.on_replace_actions_changed)
-        self.includeActiveLayerCheckBox.toggled.connect(
-            self.on_always_include_active_layer_changed
-        )
+        self.includeActiveLayerCheckBox.toggled.connect(self.on_always_include_active_layer_changed)
         self.excludeButton.clicked.connect(self.layer_model.exlude_all)
         self.includeButton.clicked.connect(self.layer_model.include_all)
 
     def on_project_color_changed(self):
-        """ Called to update the color button when the project selection color changes,
-        or when the project is read for QGIS < 3.10 """
+        """Called to update the color button when the project selection color changes,
+        or when the project is read for QGIS < 3.10"""
         try:
             self.selectionColorButton.setColor(QgsProject.instance().selectionColor())
         except AttributeError:  # QGIS < 3.10
             self.selectionColorButton.setColor(iface.mapCanvas().selectionColor())
 
     def on_color_changed(self, color: QColor):
-        """ Set the project selection color from the color button """
+        """Set the project selection color from the color button"""
 
         try:
             QgsProject.instance().setSelectionColor(color)
@@ -175,43 +151,35 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
             QgsProject.instance().setDirty()
         except AttributeError:  # QGIS < 3.10
             iface.mapCanvas().setSelectionColor(color)
-            QgsProject.instance().writeEntry(
-                "Gui", "SelectionColorRedPart", color.red()
-            )
-            QgsProject.instance().writeEntry(
-                "Gui", "SelectionColorBluePart", color.blue()
-            )
-            QgsProject.instance().writeEntry(
-                "Gui", "SelectionColorGreenPart", color.green()
-            )
-            QgsProject.instance().writeEntry(
-                "Gui", "SelectionColorAlphaPart", color.alpha()
-            )
+            QgsProject.instance().writeEntry("Gui", "SelectionColorRedPart", color.red())
+            QgsProject.instance().writeEntry("Gui", "SelectionColorBluePart", color.blue())
+            QgsProject.instance().writeEntry("Gui", "SelectionColorGreenPart", color.green())
+            QgsProject.instance().writeEntry("Gui", "SelectionColorAlphaPart", color.alpha())
 
         # Will trigger the icon color change
         self.colorChanged.emit()
 
     def on_only_visible_changed(self, checked):
-        """ Update the only_visible setting """
+        """Update the only_visible setting"""
         self.settings.setValue("only_visible", checked)
         self.settingsChanged.emit()
 
     def on_active_layer_changed(self, checked):
-        """ Update the set_active_layer setting """
+        """Update the set_active_layer setting"""
         self.settings.setValue("set_active_layer", checked)
         self.settingsChanged.emit()
 
     def on_show_settings_changed(self, checked):
-        """ Update the show_settings setting """
+        """Update the show_settings setting"""
         self.settings.setValue("show_settings", checked)
         self.settingsChanged.emit()
 
     def on_replace_actions_changed(self, checked):
-        """ Update the replace_actions setting """
+        """Update the replace_actions setting"""
         self.settings.setValue("replace_actions", checked)
         self.settingsChanged.emit()
 
     def on_always_include_active_layer_changed(self, checked):
-        """ Update the replace_actions setting """
+        """Update the replace_actions setting"""
         self.settings.setValue("always_include_active_layer", checked)
         self.settingsChanged.emit()

@@ -24,9 +24,9 @@ import os
 import configparser
 from functools import partial
 
-from PyQt5.QtCore import QSettings, QTranslator, QCoreApplication
-from PyQt5.QtGui import QIcon, QColor
-from PyQt5.QtWidgets import (
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
+from qgis.PyQt.QtGui import QIcon, QColor
+from qgis.PyQt.QtWidgets import (
     QAction,
     QMessageBox,
     QWidget,
@@ -55,8 +55,7 @@ from .utils import vector_layers
 
 from .multiselectionexpressionbuilder import MultiLayerSelectionExpressionBuilder
 
-# pylint: disable=wildcard-import,unused-wildcard-import
-from .resources import *
+from .resources import *  # noqa
 
 
 class MultiLayerSelect:
@@ -76,9 +75,7 @@ class MultiLayerSelect:
         self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
         locale = QSettings().value("locale/userLocale")[0:2]
-        locale_path = os.path.join(
-            self.plugin_dir, "i18n", "MultiLayerSelect_{}.qm".format(locale)
-        )
+        locale_path = os.path.join(self.plugin_dir, "i18n", "MultiLayerSelect_{}.qm".format(locale))
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
@@ -100,13 +97,11 @@ class MultiLayerSelect:
         :returns: Translated version of message.
         :rtype: QString
         """
-        # pylint: disable=invalid-name
 
         return QCoreApplication.translate("MultiLayerSelect", message)
 
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
-        # pylint: disable=invalid-name
 
         # Create settings dialog
         self.settings_dialog = SettingsDialog(self.settings, self.iface.mainWindow())
@@ -114,14 +109,10 @@ class MultiLayerSelect:
 
         try:
             QgsProject.instance().selectionColorChanged.connect(self.on_color_changed)
-            QgsProject.instance().selectionColorChanged.connect(
-                self.settings_dialog.on_project_color_changed
-            )
+            QgsProject.instance().selectionColorChanged.connect(self.settings_dialog.on_project_color_changed)
         except AttributeError:  # QGIS < 3.10
             self.settings_dialog.colorChanged.connect(self.on_color_changed)
-            QgsProject.instance().readProject.connect(
-                self.settings_dialog.on_project_color_changed
-            )
+            QgsProject.instance().readProject.connect(self.settings_dialog.on_project_color_changed)
 
         self.settings_dialog.settingsChanged.connect(self.on_settings_changed)
 
@@ -207,9 +198,7 @@ class MultiLayerSelect:
             action.setCheckable(True)
             select_action.tool.setAction(action)
 
-            action.triggered.connect(
-                partial(on_select_tool, select_action.tool, action)
-            )
+            action.triggered.connect(partial(on_select_tool, select_action.tool, action))
             self.selection_tool_button.addAction(action)
             if not self.selection_tool_button.defaultAction():
                 self.selection_tool_button.setDefaultAction(action)
@@ -220,18 +209,16 @@ class MultiLayerSelect:
         self.select_all_action = QAction(
             self.tr("Select all features from all layers"),
         )
-        self.select_all_action.setToolTip(
-            "<b>{}</b>".format(self.select_all_action.text())
-        )
+        self.select_all_action.setToolTip("<b>{}</b>".format(self.select_all_action.text()))
         self.select_all_action.setObjectName("actionMultiSelectAll")
         self.select_all_action.triggered.connect(self.select_all)
         self.advanced_selection_tool_button.addAction(self.select_all_action)
         self.advanced_selection_tool_button.setDefaultAction(self.select_all_action)
 
-        self.invert_all_action = QAction(self.tr("Invert selection for all layers"),)
-        self.invert_all_action.setToolTip(
-            "<b>{}</b>".format(self.invert_all_action.text())
+        self.invert_all_action = QAction(
+            self.tr("Invert selection for all layers"),
         )
+        self.invert_all_action.setToolTip("<b>{}</b>".format(self.invert_all_action.text()))
         self.invert_all_action.setObjectName("actionMultiSelectInvert")
         self.invert_all_action.triggered.connect(self.invert_all)
         self.advanced_selection_tool_button.addAction(self.invert_all_action)
@@ -240,9 +227,7 @@ class MultiLayerSelect:
             QIcon(":/images/themes/default/mIconExpressionSelect.svg"),
             self.tr("Select Features by Expression..."),
         )
-        self.select_by_expr_action.setToolTip(
-            "<b>{}</b>".format(self.select_by_expr_action.text())
-        )
+        self.select_by_expr_action.setToolTip("<b>{}</b>".format(self.select_by_expr_action.text()))
         self.select_by_expr_action.setObjectName("actionMultiSelectExpr")
         self.select_by_expr_action.triggered.connect(self.select_by_expression)
         self.advanced_selection_tool_button.addAction(self.select_by_expr_action)
@@ -250,9 +235,7 @@ class MultiLayerSelect:
         self.toolbar.addWidget(self.advanced_selection_tool_button)
 
         self.deselect_all_action = QAction(self.tr("Deselect features from all layers"))
-        self.deselect_all_action.setToolTip(
-            "<b>{}</b>".format(self.deselect_all_action.text())
-        )
+        self.deselect_all_action.setToolTip("<b>{}</b>".format(self.deselect_all_action.text()))
         self.deselect_all_action.setObjectName("actionDeselectAll")
         self.deselect_all_action.triggered.connect(self.deselect_all)
         self.toolbar.addAction(self.deselect_all_action)
@@ -290,18 +273,14 @@ class MultiLayerSelect:
         self.replace_default_action(False)
 
         try:
-            QgsProject.instance().selectionColorChanged.disconnect(
-                self.on_color_changed
-            )
-            QgsProject.instance().selectionColorChanged.disconnect(
-                self.settings_dialog.on_project_color_changed
-            )
+            QgsProject.instance().selectionColorChanged.disconnect(self.on_color_changed)
+            QgsProject.instance().selectionColorChanged.disconnect(self.settings_dialog.on_project_color_changed)
 
         except AttributeError:  # QGIS < 3.10
             pass
 
     def show_about(self):
-        """ Show the about dialog """
+        """Show the about dialog"""
 
         # Used to display plugin icon in the about message box
         bogus = QWidget(self.iface.mainWindow())
@@ -334,7 +313,7 @@ class MultiLayerSelect:
         bogus.deleteLater()
 
     def show_settings(self):
-        """ Show the settings dialog """
+        """Show the settings dialog"""
 
         geometry = self.settings_dialog.geometry()
 
@@ -350,11 +329,13 @@ class MultiLayerSelect:
         self.settings_dialog.raise_()
 
     def on_color_changed(self):
-        """ Called when the selection color has changed. Replace every icon """
+        """Called when the selection color has changed. Replace every icon"""
         color = self.iface.mapCanvas().selectionColor()
         color = QColor.fromHsv(
-            int(color.hue()), int(color.saturation() * 0.9),
-            int(color.value() * 0.95), int(color.alpha())
+            int(color.hue()),
+            int(color.saturation() * 0.9),
+            int(color.value() * 0.95),
+            int(color.alpha()),
         )
         for i in range(len(self.select_actions)):
             path = self.actions_settings[i].icon
@@ -374,7 +355,7 @@ class MultiLayerSelect:
         self.select_by_expr_action.setIcon(icon)
 
     def on_settings_changed(self):
-        """ Called when any setting has changed """
+        """Called when any setting has changed"""
         if self.settings.value("show_settings", True, bool):
             self.toolbar.addAction(self.settings_action)
         else:
@@ -383,14 +364,14 @@ class MultiLayerSelect:
         self.replace_default_action(self.settings.value("replace_actions", False, bool))
 
     def deselect_all(self):
-        """ Deselect every feature """
+        """Deselect every feature"""
         for layer in QgsProject.instance().mapLayers().values():
             if isinstance(layer, QgsVectorLayer):
                 layer.removeSelection()
         update_status_message()
 
     def select_all(self):
-        """ Select all the features from every vector layer """
+        """Select all the features from every vector layer"""
         for layer in vector_layers():
             layer.selectAll()
         self.advanced_selection_tool_button.setDefaultAction(self.select_all_action)
@@ -401,7 +382,7 @@ class MultiLayerSelect:
         update_status_message()
 
     def invert_all(self):
-        """ Invert the selection of every vector layer """
+        """Invert the selection of every vector layer"""
         for layer in vector_layers():
             layer.invertSelection()
         self.advanced_selection_tool_button.setDefaultAction(self.invert_all_action)
@@ -411,7 +392,7 @@ class MultiLayerSelect:
         update_status_message()
 
     def select_by_expression(self):
-        """ Create and open the Expression builder dialog"""
+        """Create and open the Expression builder dialog"""
 
         if self.expression_dialog:
             self.expression_dialog.deleteLater()
@@ -421,9 +402,7 @@ class MultiLayerSelect:
         self.advanced_selection_tool_button.setDefaultAction(self.select_by_expr_action)
 
         if self.embedded_advanced_tool_button:
-            self.embedded_advanced_tool_button.setDefaultAction(
-                self.select_by_expr_action
-            )
+            self.embedded_advanced_tool_button.setDefaultAction(self.select_by_expr_action)
         update_status_message()
 
     def replace_default_action(self, value):
@@ -448,12 +427,9 @@ class MultiLayerSelect:
         toolbar.removeAction(self.embedded_advanced_tool_button_action)
 
         if value:
-
             # Create the QToolButtons that will be added to the default toolbar
             self.embedded_selection_tool_button = QToolButton()
-            self.embedded_selection_tool_button.setPopupMode(
-                QToolButton.MenuButtonPopup
-            )
+            self.embedded_selection_tool_button.setPopupMode(QToolButton.MenuButtonPopup)
 
             # Add selection tools action to the button (Rect, Polygon, Radius, Freehand)
             self.embedded_selection_tool_button.addActions(self.select_actions)
@@ -487,7 +463,6 @@ class MultiLayerSelect:
             self.toolbar.hide()
 
         else:
-
             # Remove the multi actions from the default toolbar, and show
             # the custom toolbar
             self.embedded_selection_tool_button = None
@@ -498,7 +473,7 @@ class MultiLayerSelect:
 
 
 class SelectAction:
-    """ Structure used to define a selection action """
+    """Structure used to define a selection action"""
 
     def __init__(self, text, **kwargs):
         self.text = text

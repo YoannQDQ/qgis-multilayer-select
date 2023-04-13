@@ -2,14 +2,14 @@
 Helper functions
 """
 
-from PyQt5.QtCore import QCoreApplication, Qt, QSettings
+from qgis.PyQt.QtCore import QCoreApplication, Qt, QSettings
 
 from qgis.utils import iface
 from qgis.core import QgsProject, QgsVectorLayer, QgsMapLayer
 
 
 def vector_layers(only_visible=None):
-    """ Return the list of vector layers used by the plugin """
+    """Return the list of vector layers used by the plugin"""
 
     settings = QSettings()
     settings.beginGroup("plugins/multilayerselect")
@@ -25,16 +25,14 @@ def vector_layers(only_visible=None):
         and (not only_visible or layer_node.isVisible())
         and (
             (layer_node.layer() == iface.activeLayer() and include_active)
-            or not layer_node.layer().customProperty(
-                "plugins/multilayerselect/excluded", False
-            )
+            or not layer_node.layer().customProperty("plugins/multilayerselect/excluded", False)
             in (True, "true", "True", "1")
         )
     ]
 
 
 def update_status_message():
-    """ Update the status bar message according to the selected features """
+    """Update the status bar message according to the selected features"""
 
     active_layers = []
     total = 0
@@ -49,31 +47,29 @@ def update_status_message():
 
     # No feature selected
     if not active_layers:
-        iface.statusBarIface().showMessage(
-            QCoreApplication.translate("MultiSelectTool", "No features selected")
-        )
+        iface.statusBarIface().showMessage(QCoreApplication.translate("MultiSelectTool", "No features selected"))
         return
 
     # List of active layers
-    layers_str = ", ".join(l.name() for l in active_layers)
+    layers_str = ", ".join(layer.name() for layer in active_layers)
 
     # All selected features belong to the same layer
     if len(active_layers) == 1:
-        msg = QCoreApplication.translate(
-            "MultiSelectTool", "{0} features selected on layer {1}", "", total
-        ).format(total, layers_str)
+        msg = QCoreApplication.translate("MultiSelectTool", "{0} features selected on layer {1}", "", total).format(
+            total, layers_str
+        )
 
     # Feature selected acros several layers
     else:
-        msg = QCoreApplication.translate(
-            "MultiSelectTool", "{0} features selected on layers {1}", "", total
-        ).format(total, layers_str)
+        msg = QCoreApplication.translate("MultiSelectTool", "{0} features selected on layers {1}", "", total).format(
+            total, layers_str
+        )
 
     iface.statusBarIface().showMessage(msg)
 
 
 def icon_from_layer(layer: QgsMapLayer):
-    """ Get the layer icon from the layer tree """
+    """Get the layer icon from the layer tree"""
     layer_node = QgsProject.instance().layerTreeRoot().findLayer(layer)
     treemodel = iface.layerTreeView().layerTreeModel()
     index = treemodel.node2index(layer_node)
