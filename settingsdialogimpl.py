@@ -5,14 +5,14 @@ Allow to define:
  - Whether the settings action (which launch this dialog) is available in the toolbar
  - Whether selecting a feature changes the active layer
 """
+
 from collections import Counter
 
-from qgis.PyQt.QtCore import pyqtSignal, QSettings, Qt
+from qgis.core import QgsMapLayerModel, QgsMapLayerProxyModel, QgsProject
+from qgis.PyQt.QtCore import QSettings, Qt, pyqtSignal
 from qgis.PyQt.QtGui import QColor, QIcon
 from qgis.PyQt.QtWidgets import QDialog
-
 from qgis.utils import iface
-from qgis.core import QgsMapLayerProxyModel, QgsMapLayerModel, QgsProject
 
 from .settingsdialog import Ui_SettingsDialog
 from .utils import icon_from_layer
@@ -43,14 +43,18 @@ class LayerModel(QgsMapLayerProxyModel):
         Remove the custom property from every layers"""
         for layer in QgsProject.instance().mapLayers().values():
             layer.removeCustomProperty("plugins/multilayerselect/excluded")
-        self.dataChanged.emit(self.index(0, 0), self.index(self.rowCount(), 0), [Qt.CheckStateRole])
+        self.dataChanged.emit(
+            self.index(0, 0), self.index(self.rowCount(), 0), [Qt.CheckStateRole]
+        )
 
     def exlude_all(self):
         """Exclude all layers from the multiselection tools
         This is done by addinf a custom property on the layers"""
         for layer in QgsProject.instance().mapLayers().values():
             layer.setCustomProperty("plugins/multilayerselect/excluded", True)
-        self.dataChanged.emit(self.index(0, 0), self.index(self.rowCount(), 0), [Qt.CheckStateRole])
+        self.dataChanged.emit(
+            self.index(0, 0), self.index(self.rowCount(), 0), [Qt.CheckStateRole]
+        )
 
     def flags(self, index):
         """Make the model checkable"""
@@ -63,7 +67,9 @@ class LayerModel(QgsMapLayerProxyModel):
             return super().setData(index, value, role)
 
         if role == Qt.CheckStateRole:
-            layer.setCustomProperty("plugins/multilayerselect/excluded", value == Qt.Unchecked)
+            layer.setCustomProperty(
+                "plugins/multilayerselect/excluded", value == Qt.Unchecked
+            )
             return True
 
         return super().setData(index, value, role)
@@ -85,7 +91,9 @@ class LayerModel(QgsMapLayerProxyModel):
             return icon_from_layer(layer)
 
         if role == Qt.CheckStateRole:
-            excluded = layer.customProperty("plugins/multilayerselect/excluded", False) in (True, "true", "True", "1")
+            excluded = layer.customProperty(
+                "plugins/multilayerselect/excluded", False
+            ) in (True, "true", "True", "1")
             return 0 if excluded else 2
 
         return super().data(index, role)
@@ -111,15 +119,30 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         blue = qgis_settings.value("qgis/default_selection_color_blue", 0, int)
         alpha = qgis_settings.value("qgis/default_selection_color_alpha", 255, int)
 
-        self.selectionColorButton.setDefaultColor(QColor.fromRgb(red, green, blue, alpha))
+        self.selectionColorButton.setDefaultColor(
+            QColor.fromRgb(red, green, blue, alpha)
+        )
         self.selectionColorButton.setColor(iface.mapCanvas().selectionColor())
 
-        self.onlyVisibleCheckBox.setChecked(self.settings.value("only_visible", True, bool))
-        self.activeLayerCheckBox.setChecked(self.settings.value("set_active_layer", True, bool))
-        self.showSettingsCheckBox.setChecked(self.settings.value("show_settings", True, bool))
-        self.replaceActionsCheckBox.setChecked(self.settings.value("replace_actions", False, bool))
+        self.onlyVisibleCheckBox.setChecked(
+            self.settings.value("only_visible", True, bool)
+        )
+        self.ignoreScaleCheckBox.setChecked(
+            self.settings.value("ignore_scale", False, bool)
+        )
+        self.activeLayerCheckBox.setChecked(
+            self.settings.value("set_active_layer", True, bool)
+        )
+        self.showSettingsCheckBox.setChecked(
+            self.settings.value("show_settings", True, bool)
+        )
+        self.replaceActionsCheckBox.setChecked(
+            self.settings.value("replace_actions", False, bool)
+        )
 
-        self.includeActiveLayerCheckBox.setChecked(self.settings.value("always_include_active_layer", True, bool))
+        self.includeActiveLayerCheckBox.setChecked(
+            self.settings.value("always_include_active_layer", True, bool)
+        )
 
         self.layer_model = LayerModel(self)
         self.view.setModel(self.layer_model)
@@ -127,10 +150,13 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
         # Connect signals
         self.selectionColorButton.colorChanged.connect(self.on_color_changed)
         self.onlyVisibleCheckBox.toggled.connect(self.on_only_visible_changed)
+        self.ignoreScaleCheckBox.toggled.connect(self.on_ignore_scale_changed)
         self.activeLayerCheckBox.toggled.connect(self.on_active_layer_changed)
         self.showSettingsCheckBox.toggled.connect(self.on_show_settings_changed)
         self.replaceActionsCheckBox.toggled.connect(self.on_replace_actions_changed)
-        self.includeActiveLayerCheckBox.toggled.connect(self.on_always_include_active_layer_changed)
+        self.includeActiveLayerCheckBox.toggled.connect(
+            self.on_always_include_active_layer_changed
+        )
         self.excludeButton.clicked.connect(self.layer_model.exlude_all)
         self.includeButton.clicked.connect(self.layer_model.include_all)
 
@@ -151,10 +177,18 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
             QgsProject.instance().setDirty()
         except AttributeError:  # QGIS < 3.10
             iface.mapCanvas().setSelectionColor(color)
-            QgsProject.instance().writeEntry("Gui", "SelectionColorRedPart", color.red())
-            QgsProject.instance().writeEntry("Gui", "SelectionColorBluePart", color.blue())
-            QgsProject.instance().writeEntry("Gui", "SelectionColorGreenPart", color.green())
-            QgsProject.instance().writeEntry("Gui", "SelectionColorAlphaPart", color.alpha())
+            QgsProject.instance().writeEntry(
+                "Gui", "SelectionColorRedPart", color.red()
+            )
+            QgsProject.instance().writeEntry(
+                "Gui", "SelectionColorBluePart", color.blue()
+            )
+            QgsProject.instance().writeEntry(
+                "Gui", "SelectionColorGreenPart", color.green()
+            )
+            QgsProject.instance().writeEntry(
+                "Gui", "SelectionColorAlphaPart", color.alpha()
+            )
 
         # Will trigger the icon color change
         self.colorChanged.emit()
@@ -167,6 +201,11 @@ class SettingsDialog(QDialog, Ui_SettingsDialog):
     def on_active_layer_changed(self, checked):
         """Update the set_active_layer setting"""
         self.settings.setValue("set_active_layer", checked)
+        self.settingsChanged.emit()
+
+    def on_ignore_scale_changed(self, checked):
+        """Update the ignore_scale setting"""
+        self.settings.setValue("ignore_scale", checked)
         self.settingsChanged.emit()
 
     def on_show_settings_changed(self, checked):

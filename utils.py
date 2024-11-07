@@ -2,10 +2,9 @@
 Helper functions
 """
 
-from qgis.PyQt.QtCore import QCoreApplication, Qt, QSettings
-
+from qgis.core import QgsMapLayer, QgsProject, QgsVectorLayer
+from qgis.PyQt.QtCore import QCoreApplication, QSettings, Qt
 from qgis.utils import iface
-from qgis.core import QgsProject, QgsVectorLayer, QgsMapLayer
 
 
 def vector_layers(only_visible=None):
@@ -25,7 +24,9 @@ def vector_layers(only_visible=None):
         and (not only_visible or layer_node.isVisible())
         and (
             (layer_node.layer() == iface.activeLayer() and include_active)
-            or not layer_node.layer().customProperty("plugins/multilayerselect/excluded", False)
+            or not layer_node.layer().customProperty(
+                "plugins/multilayerselect/excluded", False
+            )
             in (True, "true", "True", "1")
         )
     ]
@@ -47,7 +48,9 @@ def update_status_message():
 
     # No feature selected
     if not active_layers:
-        iface.statusBarIface().showMessage(QCoreApplication.translate("MultiSelectTool", "No features selected"))
+        iface.statusBarIface().showMessage(
+            QCoreApplication.translate("MultiSelectTool", "No features selected")
+        )
         return
 
     # List of active layers
@@ -55,15 +58,15 @@ def update_status_message():
 
     # All selected features belong to the same layer
     if len(active_layers) == 1:
-        msg = QCoreApplication.translate("MultiSelectTool", "{0} features selected on layer {1}", "", total).format(
-            total, layers_str
-        )
+        msg = QCoreApplication.translate(
+            "MultiSelectTool", "{0} features selected on layer {1}", "", total
+        ).format(total, layers_str)
 
     # Feature selected acros several layers
     else:
-        msg = QCoreApplication.translate("MultiSelectTool", "{0} features selected on layers {1}", "", total).format(
-            total, layers_str
-        )
+        msg = QCoreApplication.translate(
+            "MultiSelectTool", "{0} features selected on layers {1}", "", total
+        ).format(total, layers_str)
 
     iface.statusBarIface().showMessage(msg)
 
