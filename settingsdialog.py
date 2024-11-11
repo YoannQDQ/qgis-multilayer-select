@@ -144,7 +144,7 @@ class Ui_SettingsDialog(object):
             )
         )
         self.onlyVisibleCheckBox.setText(
-            _translate("SettingsDialog", "Exlude hidden layers")
+            _translate("SettingsDialog", "Exclude hidden layers")
         )
         self.includeActiveLayerCheckBox.setToolTip(
             _translate(
