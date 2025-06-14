@@ -1,14 +1,18 @@
-""" Helper function to generate dynamic QIcons and QCursors """
+"""Helper function to generate dynamic QIcons and QCursors"""
 
 import math
-
-from qgis.PyQt.QtCore import QSize, QPointF
-from qgis.PyQt.QtGui import QIcon, QColor, QPainter, QPixmap, QPen, QPolygonF, QCursor
+from pathlib import Path
 
 from qgis.core import Qgis, QgsApplication
-
+from qgis.PyQt.QtCore import QPointF, QSize
+from qgis.PyQt.QtGui import QColor, QCursor, QIcon, QPainter, QPen, QPixmap, QPolygonF
 
 DEFAULT_ICON_SIZE = QSize(48, 48)
+
+
+def icon_path(icon_name) -> str:
+    """Return the absolute path to an icon resource"""
+    return str(Path(__file__).parent / "icons" / icon_name)
 
 
 def create_icon(icon_path, color, base_size=DEFAULT_ICON_SIZE):
@@ -111,7 +115,7 @@ def expression_select_icon(color, base_size=DEFAULT_ICON_SIZE):
 
     ratio = int(base_size.width() / 48.0)
 
-    base_icon = QIcon(":/plugins/multilayerselect/icons/selectExpression.svg")
+    base_icon = QIcon(icon_path("selectExpression.svg"))
     base_pixmap = base_icon.pixmap(base_size)
 
     stroke_color = color.darker()

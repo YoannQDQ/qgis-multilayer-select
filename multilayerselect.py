@@ -31,7 +31,7 @@ from qgis.PyQt.QtCore import QCoreApplication, QObject, QSettings, QTranslator
 from qgis.PyQt.QtGui import QColor, QIcon
 from qgis.PyQt.QtWidgets import QAction, QMessageBox, QToolBar, QToolButton, QWidget
 
-from .icon_utils import create_icon, expression_select_icon, invert_selection_icon, select_all_icon
+from .icon_utils import create_icon, expression_select_icon, icon_path, invert_selection_icon, select_all_icon
 from .maptools import (
     MultiSelectionAreaTool,
     MultiSelectionFreehandTool,
@@ -40,7 +40,6 @@ from .maptools import (
     update_status_message,
 )
 from .multiselectionexpressionbuilder import MultiLayerSelectionExpressionBuilder
-from .resources import *  # noqa
 from .settingsdialog import SettingsDialog
 from .utils import vector_layers
 
@@ -110,7 +109,7 @@ class MultiLayerSelect:
         self.toolbar.setObjectName("MultiSelectToolbar")
 
         self.about_action = QAction(
-            QIcon(":/plugins/multilayerselect/icons/about.svg"),
+            QIcon(icon_path("about.svg")),
             self.tr("About Multilayer Select"),
             parent=self.action_container,
         )
@@ -125,9 +124,7 @@ class MultiLayerSelect:
 
         self.settings_action.triggered.connect(self.show_settings)
 
-        self.plugin_menu = self.iface.pluginMenu().addMenu(
-            QIcon(":/plugins/multilayerselect/icons/icon.svg"), "Multilayer Select"
-        )
+        self.plugin_menu = self.iface.pluginMenu().addMenu(QIcon(icon_path("icon.svg")), "Multilayer Select")
         self.plugin_menu.addAction(self.about_action)
         self.plugin_menu.addAction(self.settings_action)
 
@@ -148,25 +145,25 @@ class MultiLayerSelect:
             SelectAction(
                 text=self.tr("Select Features"),
                 tooltip=self.tr("<b>Select Features by area or single click</b>"),
-                icon=":/plugins/multilayerselect/icons/selectRectangle.svg",
+                icon=icon_path("selectRectangle.svg"),
                 objectname="actionMultiSelectByRectangle",
                 tool=self.select_rect_tool,
             ),
             SelectAction(
                 text=self.tr("Select Features by Polygon"),
-                icon=":/plugins/multilayerselect/icons/selectPolygon.svg",
+                icon=icon_path("selectPolygon.svg"),
                 objectname="actionMultiSelectByPolygon",
                 tool=self.select_polygon_tool,
             ),
             SelectAction(
                 text=self.tr("Select Features by Freehand"),
-                icon=":/plugins/multilayerselect/icons/selectFreehand.svg",
+                icon=icon_path("selectFreehand.svg"),
                 objectname="actionMultiSelectByFreehand",
                 tool=self.select_freehand_tool,
             ),
             SelectAction(
                 text=self.tr("Select Features by Radius"),
-                icon=":/plugins/multilayerselect/icons/selectRadius.svg",
+                icon=icon_path("selectRadius.svg"),
                 objectname="actionMultiSelectByRadius",
                 tool=self.select_radius_tool,
             ),
@@ -285,7 +282,7 @@ class MultiLayerSelect:
 
         # Used to display plugin icon in the about message box
         bogus = QWidget(self.iface.mainWindow())
-        bogus.setWindowIcon(QIcon(":/plugins/multilayerselect/icons/icon.svg"))
+        bogus.setWindowIcon(QIcon(icon_path("icon.svg")))
 
         cfg = configparser.ConfigParser()
         cfg.read(os.path.join(os.path.dirname(__file__), "metadata.txt"))
@@ -343,7 +340,7 @@ class MultiLayerSelect:
             icon = create_icon(path, color)
             self.select_actions[i].setIcon(icon)
 
-        icon = create_icon(":/plugins/multilayerselect/icons/deselectAll.svg", color)
+        icon = create_icon(icon_path("deselectAll.svg"), color)
         self.deselect_all_action.setIcon(icon)
 
         icon = select_all_icon(color)
@@ -479,7 +476,7 @@ class SelectAction:
     def __init__(self, text, **kwargs):
         self.text = text
         self.tooltip = "<b>{}</b>".format(text)
-        self.icon = ":/plugins/multilayerselect/icons/selectRectangle.svg"
+        self.icon = icon_path("selectRectangle.svg")
         self.objectname = ""
         self.tool = None
         self.__dict__.update(kwargs)

@@ -16,6 +16,8 @@ from qgis.PyQt.QtGui import QColor, QIcon
 from qgis.PyQt.QtWidgets import QDialog
 from qgis.utils import iface
 
+from .icon_utils import icon_path
+
 # from .__settingsdialog import Ui_SettingsDialog
 from .utils import icon_from_layer
 
@@ -108,7 +110,7 @@ class SettingsDialog(QDialog, FORM_CLASS):
 
         self.settings = settings
 
-        self.setWindowIcon(QIcon(":/plugins/multilayerselect/icons/icon.svg"))
+        self.setWindowIcon(QIcon(icon_path("icon.svg")))
 
         qgis_settings = QSettings()
         red = qgis_settings.value("qgis/default_selection_color_red", 255, int)

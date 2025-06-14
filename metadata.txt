@@ -1,8 +1,9 @@
 [general]
 name=Multilayer Select
 qgisMinimumVersion=3.0
+qgisMaximumVersion=3.99
 description=Multilayer selection tools
-version=1.5.0
+version=1.6.0
 author=Yoann Quenach de Quivillic
 email=yoann.quenach@gmail.com
 about=Add a toolbar to select by point/rectangle/circle across multiple vector layers
@@ -11,7 +12,9 @@ about=Add a toolbar to select by point/rectangle/circle across multiple vector l
 
 hasProcessingProvider=no
 
-changelog=1.5.0 2023-03-18
+changelog=1.6.0 2025-06-15
+      * Add option to ignore scale dependent visibility
+      1.5.0 2023-03-18
       * Enable Keyboard Shortcuts
       1.4.2 2023-03-18
       * Fix QColor.fromHsv on Linux
@@ -37,6 +40,7 @@ repository=https://github.com/YoannQDQ/qgis-multilayer-select
 
 icon=icon.png
 experimental=False
+supportsQt6=True
 category=Vector
 tags=python,select,layer,selection,maptool,feature
 deprecated=False

@@ -8,7 +8,7 @@ from qgis.PyQt.QtCore import QEvent, QPoint, QSettings, Qt, pyqtSignal
 from qgis.PyQt.QtWidgets import QHBoxLayout, QLabel, QSizePolicy, QWidget
 from qgis.utils import iface
 
-from .icon_utils import cursor_from_image
+from .icon_utils import cursor_from_image, icon_path
 from .ignore_scale import disable_scale_based_visibility
 from .utils import update_status_message, vector_layers
 
@@ -188,7 +188,7 @@ class MultiSelectionAreaTool(MultiSelectTool):
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectRectangleCursor.svg"))
+        self.setCursor(cursor_from_image(icon_path("selectRectangleCursor.svg")))
         self.ref_point = None
         self.ref_pos = None
 
@@ -248,7 +248,7 @@ class MultiSelectionPolygonTool(MultiSelectTool):
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectPolygonCursor.svg"))
+        self.setCursor(cursor_from_image(icon_path("selectPolygonCursor.svg")))
         self.pressed = False
 
     def canvasPressEvent(self, event):
@@ -358,7 +358,7 @@ class MultiSelectionRadiusTool(MultiSelectTool):
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectRadiusCursor.svg"))
+        self.setCursor(cursor_from_image(icon_path("selectRadiusCursor.svg")))
         self.center_point = None
         self.distance_widget: DistanceWidget = None
 
@@ -446,7 +446,7 @@ class MultiSelectionFreehandTool(MultiSelectTool):
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectFreehandCursor.svg"))
+        self.setCursor(cursor_from_image(icon_path("selectFreehandCursor.svg")))
         self.ref_point = None
 
     def canvasMoveEvent(self, event):
