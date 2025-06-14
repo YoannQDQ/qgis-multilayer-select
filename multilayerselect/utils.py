@@ -73,3 +73,8 @@ def icon_from_layer(layer: QgsMapLayer):
     treemodel = iface.layerTreeView().layerTreeModel()
     index = treemodel.node2index(layer_node)
     return treemodel.data(index, Qt.DecorationRole)
+
+
+def resource_path(filename: str) -> str:
+    """Return the absolute path to a resource file"""
+    return str(QgsProject.instance().readPath(f":/multilayerselect/{filename}"))

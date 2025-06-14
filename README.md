@@ -1,6 +1,6 @@
 Multilayer Select (QGIS plugin)
 ===
-![Icon](./icon.png)
+![Icon](./multilayerselect/icon.png)
 
 Add new selection tools that work across layers.
 
