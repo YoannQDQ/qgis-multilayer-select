@@ -7,3 +7,4 @@
 *.code-workspace
 **/zip_build/*
 .venv
+.ruff_cache
