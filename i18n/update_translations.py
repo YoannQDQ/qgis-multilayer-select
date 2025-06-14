@@ -1,8 +1,7 @@
-""" Scan plugin folder for translations"""
+"""Scan plugin folder for translations"""
 
-import os
 import contextlib
-
+import os
 from pathlib import Path
 
 LANGUAGE_LIST = ["en", "fr"]
@@ -29,5 +28,7 @@ if __name__ == "__main__":
     with working_directory(Path(__file__).parent):
         PATHS = []
         for filepath in Path("..").rglob("*.py"):
+            PATHS.append(f'"{filepath}"')
+        for filepath in Path("..").rglob("*.ui"):
             PATHS.append(f'"{filepath}"')
         os.system(f"pylupdate5 -verbose -noobsolete {' '.join(PATHS)} -ts {get_ts_list()}")
