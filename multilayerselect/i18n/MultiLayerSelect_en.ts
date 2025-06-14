@@ -4,72 +4,72 @@
 <context>
     <name>MultiLayerSelect</name>
     <message>
-        <location filename="../multilayerselect.py" line="148"/>
+        <location filename="../multilayerselect.py" line="145"/>
         <source>Select Features</source>
         <translation>Select Features</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="148"/>
+        <location filename="../multilayerselect.py" line="145"/>
         <source>&lt;b&gt;Select Features by area or single click&lt;/b&gt;</source>
         <translation>&lt;b&gt;Select Features by area or single click&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="155"/>
+        <location filename="../multilayerselect.py" line="152"/>
         <source>Select Features by Polygon</source>
         <translation>Select Features by Polygon</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="161"/>
+        <location filename="../multilayerselect.py" line="158"/>
         <source>Select Features by Freehand</source>
         <translation>Select Features by Freehand</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="167"/>
+        <location filename="../multilayerselect.py" line="164"/>
         <source>Select Features by Radius</source>
         <translation>Select Features by Radius</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="297"/>
+        <location filename="../multilayerselect.py" line="294"/>
         <source>About Multilayer Select</source>
         <translation>About Multilayer Select</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="297"/>
+        <location filename="../multilayerselect.py" line="294"/>
         <source>Source code</source>
         <translation>Source code</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="297"/>
+        <location filename="../multilayerselect.py" line="294"/>
         <source>Report issues</source>
         <translation>Report issues</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="297"/>
+        <location filename="../multilayerselect.py" line="294"/>
         <source>Documentation</source>
         <translation>Documentation</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="219"/>
+        <location filename="../multilayerselect.py" line="216"/>
         <source>Select Features by Expression...</source>
         <translation>Select Features by Expression...</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="119"/>
+        <location filename="../multilayerselect.py" line="118"/>
         <source>Multilayer Select Settings</source>
         <translation>Multilayer Select Settings</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="206"/>
+        <location filename="../multilayerselect.py" line="203"/>
         <source>Select All Features from All Layers</source>
         <translation>Select All Features from All Layers</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="213"/>
+        <location filename="../multilayerselect.py" line="210"/>
         <source>Invert Selection for All Layers</source>
         <translation>Invert Selection for All Layers</translation>
     </message>
     <message>
-        <location filename="../multilayerselect.py" line="231"/>
+        <location filename="../multilayerselect.py" line="228"/>
         <source>Deselect Features from All Layers</source>
         <translation>Deselect Features from All Layers</translation>
     </message>

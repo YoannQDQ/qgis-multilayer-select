@@ -8,3 +8,5 @@
 **/zip_build/*
 .venv
 .ruff_cache
+*.qm
+*.zip
