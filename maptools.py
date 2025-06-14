@@ -1,22 +1,15 @@
-""" Mutli Selection Map tools """
+"""Mutli Selection Map tools"""
 
 import math
 
-from qgis.core import (
-    QgsGeometry,
-    QgsPointXY,
-    QgsProject,
-    QgsRectangle,
-    QgsVectorLayer,
-    QgsWkbTypes,
-)
+from qgis.core import QgsGeometry, QgsPointXY, QgsRectangle, QgsVectorLayer, QgsWkbTypes
 from qgis.gui import QgsDoubleSpinBox, QgsMapTool, QgsMapToolIdentify, QgsRubberBand
 from qgis.PyQt.QtCore import QEvent, QPoint, QSettings, Qt, pyqtSignal
 from qgis.PyQt.QtWidgets import QHBoxLayout, QLabel, QSizePolicy, QWidget
 from qgis.utils import iface
 
 from .icon_utils import cursor_from_image
-from .layers_settings import LayersSettings
+from .ignore_scale import disable_scale_based_visibility
 from .utils import update_status_message, vector_layers
 
 
@@ -32,10 +25,7 @@ def has_moved(pos1: QPoint, pos2: QPoint, pixel_threshold=10):
     Returns:
         bool: True if the position has changed
     """
-    return (
-        math.sqrt(math.pow(pos1.x() - pos2.x(), 2) + math.pow(pos1.y() - pos2.y(), 2))
-        > pixel_threshold
-    )
+    return math.sqrt(math.pow(pos1.x() - pos2.x(), 2) + math.pow(pos1.y() - pos2.y(), 2)) > pixel_threshold
 
 
 class MultiSelectTool(QgsMapToolIdentify):
@@ -85,6 +75,13 @@ class MultiSelectTool(QgsMapToolIdentify):
         self.reset()
 
     def select(self, geom, modifiers):
+        if QSettings().value("plugins/multilayerselect/ignore_scale", False, bool):
+            with disable_scale_based_visibility():
+                self._select(geom, modifiers)
+        else:
+            self._select(geom, modifiers)
+
+    def _select(self, geom, modifiers):
         """Select the features contained in geom
 
         Args:
@@ -129,11 +126,7 @@ class MultiSelectTool(QgsMapToolIdentify):
                 if shift or ctrl:
                     layer.selectByIds(
                         new,
-                        (
-                            QgsVectorLayer.RemoveFromSelection
-                            if was_selected
-                            else QgsVectorLayer.AddToSelection
-                        ),
+                        (QgsVectorLayer.RemoveFromSelection if was_selected else QgsVectorLayer.AddToSelection),
                     )
 
                 # Otherwise, clear previous selection and select the clicked feature
@@ -177,9 +170,7 @@ class MultiSelectTool(QgsMapToolIdentify):
         if (
             active_layers
             and iface.activeLayer() not in active_layers
-            and QSettings().value(
-                "plugins/multilayerselect/set_active_layer", True, bool
-            )
+            and QSettings().value("plugins/multilayerselect/set_active_layer", True, bool)
         ):
             iface.setActiveLayer(active_layers[0])
 
@@ -197,11 +188,7 @@ class MultiSelectionAreaTool(MultiSelectTool):
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(
-            cursor_from_image(
-                ":/plugins/multilayerselect/icons/selectRectangleCursor.svg"
-            )
-        )
+        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectRectangleCursor.svg"))
         self.ref_point = None
         self.ref_pos = None
 
@@ -261,11 +248,7 @@ class MultiSelectionPolygonTool(MultiSelectTool):
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(
-            cursor_from_image(
-                ":/plugins/multilayerselect/icons/selectPolygonCursor.svg"
-            )
-        )
+        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectPolygonCursor.svg"))
         self.pressed = False
 
     def canvasPressEvent(self, event):
@@ -286,15 +269,7 @@ class MultiSelectionPolygonTool(MultiSelectTool):
         elif event.button() == Qt.RightButton:
             if self.rubber.numberOfVertices() > 2:
                 geom = self.rubber.asGeometry()
-                if QSettings().value(
-                    "plugins/multilayerselect/ignore_scale", False, bool
-                ):
-                    layers_settings = LayersSettings()
-                    layers_settings.disable_scale_based_visibility()
-                    self.select(geom, event.modifiers())
-                    layers_settings.restore_scale_based_visibility()
-                else:
-                    self.select(geom, event.modifiers())
+                self.select(geom, event.modifiers())
             self.reset()
 
     def canvasReleaseEvent(self, event):
@@ -383,9 +358,7 @@ class MultiSelectionRadiusTool(MultiSelectTool):
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(
-            cursor_from_image(":/plugins/multilayerselect/icons/selectRadiusCursor.svg")
-        )
+        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectRadiusCursor.svg"))
         self.center_point = None
         self.distance_widget: DistanceWidget = None
 
@@ -473,11 +446,7 @@ class MultiSelectionFreehandTool(MultiSelectTool):
 
     def __init__(self, canvas):
         super().__init__(canvas)
-        self.setCursor(
-            cursor_from_image(
-                ":/plugins/multilayerselect/icons/selectFreehandCursor.svg"
-            )
-        )
+        self.setCursor(cursor_from_image(":/plugins/multilayerselect/icons/selectFreehandCursor.svg"))
         self.ref_point = None
 
     def canvasMoveEvent(self, event):

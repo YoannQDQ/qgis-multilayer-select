@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>279</width>
-    <height>359</height>
+    <width>294</width>
+    <height>368</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -97,9 +97,6 @@
    </item>
    <item>
     <widget class="QGroupBox" name="groupBox">
-     <property name="toolTip">
-      <string>Allow to define layers that will not be considered by the multiselection tools (i.e. vector basemaps)</string>
-     </property>
      <property name="title">
       <string>Included Layers</string>
      </property>
@@ -107,10 +104,10 @@
       <item>
        <widget class="QCheckBox" name="onlyVisibleCheckBox">
         <property name="toolTip">
-         <string>If checked, the active layer will be handled by the selection tools even if it is unchecked in the list below</string>
+         <string>If checked, ignore invisible layers (unchecked in layer tree)</string>
         </property>
         <property name="text">
-         <string>Exlude hidden layers</string>
+         <string>Exclude hidden layers</string>
         </property>
        </widget>
       </item>
@@ -125,7 +122,21 @@
        </widget>
       </item>
       <item>
-       <widget class="QListView" name="view"/>
+       <widget class="QCheckBox" name="ignoreScaleCheckBox">
+        <property name="toolTip">
+         <string>If checked, scale dependent visibility will be disabled while the selection occurs</string>
+        </property>
+        <property name="text">
+         <string>Ignore scale-dependent visibility</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListView" name="view">
+        <property name="toolTip">
+         <string>Allow to define layers that will not be considered by the multiselection tools (i.e. vector basemaps)</string>
+        </property>
+       </widget>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">

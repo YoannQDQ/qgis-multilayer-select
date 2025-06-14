@@ -24,10 +24,8 @@ def vector_layers(only_visible=None):
         and (not only_visible or layer_node.isVisible())
         and (
             (layer_node.layer() == iface.activeLayer() and include_active)
-            or not layer_node.layer().customProperty(
-                "plugins/multilayerselect/excluded", False
-            )
-            in (True, "true", "True", "1")
+            or layer_node.layer().customProperty("plugins/multilayerselect/excluded", False)
+            not in (True, "true", "True", "1")
         )
     ]
 
@@ -48,9 +46,7 @@ def update_status_message():
 
     # No feature selected
     if not active_layers:
-        iface.statusBarIface().showMessage(
-            QCoreApplication.translate("MultiSelectTool", "No features selected")
-        )
+        iface.statusBarIface().showMessage(QCoreApplication.translate("MultiSelectTool", "No features selected"))
         return
 
     # List of active layers
@@ -58,15 +54,15 @@ def update_status_message():
 
     # All selected features belong to the same layer
     if len(active_layers) == 1:
-        msg = QCoreApplication.translate(
-            "MultiSelectTool", "{0} features selected on layer {1}", "", total
-        ).format(total, layers_str)
+        msg = QCoreApplication.translate("MultiSelectTool", "{0} features selected on layer {1}", "", total).format(
+            total, layers_str
+        )
 
     # Feature selected acros several layers
     else:
-        msg = QCoreApplication.translate(
-            "MultiSelectTool", "{0} features selected on layers {1}", "", total
-        ).format(total, layers_str)
+        msg = QCoreApplication.translate("MultiSelectTool", "{0} features selected on layers {1}", "", total).format(
+            total, layers_str
+        )
 
     iface.statusBarIface().showMessage(msg)
 

@@ -4,29 +4,28 @@ Multilayer version of the QgsExpressionSelectionDialog
 
 from functools import partial
 
-from qgis.PyQt.QtWidgets import (
-    QDialog,
-    QToolButton,
-    QPushButton,
-    QVBoxLayout,
-    QHBoxLayout,
-    QAction,
-    QCheckBox,
-)
-from qgis.PyQt.QtCore import Qt
-from qgis.PyQt.QtGui import QIcon
-
 from qgis.core import (
-    QgsVectorLayer,
-    QgsFields,
+    Qgis,
     QgsExpressionContext,
     QgsExpressionContextUtils,
-    QgsRectangle,
-    Qgis,
-    QgsSettings,
     QgsFeatureRequest,
+    QgsFields,
+    QgsRectangle,
+    QgsSettings,
+    QgsVectorLayer,
 )
 from qgis.gui import QgsExpressionBuilderWidget, QgsHelp
+from qgis.PyQt.QtCore import Qt
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtWidgets import (
+    QAction,
+    QCheckBox,
+    QDialog,
+    QHBoxLayout,
+    QPushButton,
+    QToolButton,
+    QVBoxLayout,
+)
 from qgis.utils import iface
 
 from .utils import update_status_message, vector_layers

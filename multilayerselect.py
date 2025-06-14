@@ -20,6 +20,7 @@
  *                                                                         *
  ***************************************************************************/
 """
+
 import configparser
 import os
 from functools import partial
@@ -40,7 +41,7 @@ from .maptools import (
 )
 from .multiselectionexpressionbuilder import MultiLayerSelectionExpressionBuilder
 from .resources import *  # noqa
-from .settingsdialogimpl import SettingsDialog
+from .settingsdialog import SettingsDialog
 from .utils import vector_layers
 
 
