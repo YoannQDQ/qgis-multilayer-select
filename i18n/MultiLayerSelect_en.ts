@@ -158,7 +158,7 @@
 <context>
     <name>MultiSelectionRadiusTool</name>
     <message>
-        <location filename="../maptools.py" line="427"/>
+        <location filename="../maptools.py" line="454"/>
         <source>Selection radius</source>
         <translation>Selection radius</translation>
     </message>
@@ -166,69 +166,79 @@
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="../settingsdialog.py" line="98"/>
+        <location filename="../settingsdialog.py" line="120"/>
         <source>MultiLayer Select Settings</source>
         <translation>MultiLayer Select Settings</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="99"/>
+        <location filename="../settingsdialog.py" line="123"/>
         <source>Selection color</source>
         <translation>Selection color</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="100"/>
+        <location filename="../settingsdialog.py" line="124"/>
         <source>Set active layer from selected feature</source>
         <translation>Set active layer from selected feature</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="101"/>
+        <location filename="../settingsdialog.py" line="127"/>
         <source>Replace default selection actions (BETA)</source>
         <translation>Replace default selection actions (BETA)</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="102"/>
+        <location filename="../settingsdialog.py" line="130"/>
         <source>Display settings action on toolbar</source>
         <translation>Display settings action on toolbar</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="111"/>
+        <location filename="../settingsdialog.py" line="169"/>
         <source>Ok</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="103"/>
+        <location filename="../settingsdialog.py" line="133"/>
         <source>Allow to define layers that will not be considered by the multiselection tools (i.e. vector basemaps)</source>
         <translation>Allow to define layers that will not be considered by the multiselection tools (i.e. vector basemaps)</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="104"/>
+        <location filename="../settingsdialog.py" line="139"/>
         <source>Included Layers</source>
         <translation>Included Layers</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="107"/>
+        <location filename="../settingsdialog.py" line="140"/>
         <source>If checked, the active layer will be handled by the selection tools even if it is unchecked in the list below</source>
         <translation>If checked, the active layer will be handled by the selection tools even if it is unchecked in the list below</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="108"/>
+        <location filename="../settingsdialog.py" line="155"/>
         <source>Always include active layer</source>
         <translation>Always include active layer</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="109"/>
+        <location filename="../settingsdialog.py" line="158"/>
+        <source>If checked, the scale based visibility will be disabled by the selection tools</source>
+        <translation>If checked, the scale based visibility will be disabled by the selection tools</translation>
+    </message>
+    <message>
+        <location filename="../settingsdialog.py" line="167"/>
         <source>Include All</source>
         <translation>Include All</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="110"/>
+        <location filename="../settingsdialog.py" line="168"/>
         <source>Exclude All</source>
         <translation>Exclude All</translation>
     </message>
     <message>
-        <location filename="../settingsdialog.py" line="106"/>
-        <source>Exlude hidden layers</source>
-        <translation>Exlude hidden layers</translation>
+        <location filename="../settingsdialog.py" line="146"/>
+        <source>Exclude hidden layers</source>
+        <translation>Exclude hidden layers</translation>
+    </message>
+    <message>
+        <location filename="../settingsdialog.py" line="164"/>
+        <source>Include hidden entities according to scale</source>
+        <translation>Include hidden entities according to scale</translation>
     </message>
 </context>
 </TS>
